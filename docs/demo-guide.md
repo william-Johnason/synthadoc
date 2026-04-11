@@ -137,7 +137,10 @@ cp obsidian-plugin/main.js obsidian-plugin/manifest.json "$vault/.obsidian/plugi
 
 ---
 
-**Step 5 — Enable and configure the plugin**
+**Step 5 — Restart Obsidian, then enable and configure the plugin**
+
+After copying the files, **fully quit and reopen Obsidian** — the plugin will not appear
+until Obsidian is restarted.
 
 1. In Obsidian: **Settings** → **Community plugins** → find **Synthadoc** → toggle **on**
 2. Click the gear icon next to the Synthadoc entry
