@@ -407,6 +407,9 @@ class IngestUrlModal extends Modal {
 
 class QueryModal extends Modal {
     onOpen() {
+        // Scale with viewport: min 520px, 60% of screen width, max 860px
+        this.modalEl.style.width = "clamp(520px, 60vw, 860px)";
+
         const { contentEl } = this;
         contentEl.createEl("h3", { text: "Synthadoc: Query your wiki" });
 
@@ -417,7 +420,7 @@ class QueryModal extends Modal {
         const btn = row.createEl("button", { text: "Ask" });
 
         const out = contentEl.createEl("div");
-        out.style.cssText = "max-height:60vh;overflow-y:auto;padding:4px 0";
+        out.style.cssText = "max-height:65vh;overflow-y:auto;padding:4px 0";
 
         const submit = async () => {
             if (!input.value.trim()) return;

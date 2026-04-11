@@ -26,6 +26,7 @@ vi.mock("obsidian", () => ({
     },
     Modal: class {
         app: any;
+        modalEl = { style: {} as CSSStyleDeclaration };
         contentEl = {
             createEl: vi.fn().mockReturnValue({
                 style: {}, onclick: null, disabled: false, setText: vi.fn(), value: "",
