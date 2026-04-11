@@ -218,6 +218,7 @@ Use a **second terminal** for all commands below. All plugin commands are now ac
 | `Synthadoc: Ingest current file as source` | Queues the open file for ingest |
 | `Synthadoc: Ingest all sources` | Queues every file under `raw_sources/` |
 | `Synthadoc: Ingest from URL...` | Opens a URL input modal; queues a web page for ingest |
+| `Synthadoc: Web search...` | Opens a search modal; type a topic and the engine fetches web results and ingests them *(v2)* |
 | `Synthadoc: Query wiki...` | Opens a query modal with markdown-rendered answer and citations |
 | `Synthadoc: Lint report` | Opens a modal showing contradicted pages and orphans |
 | `Synthadoc: Run lint` | Queues a lint job; shows a notice with contradiction + orphan counts |

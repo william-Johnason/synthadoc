@@ -70,6 +70,12 @@ export default class SynthadocPlugin extends Plugin {
         });
 
         this.addCommand({
+            id: "synthadoc-web-search",
+            name: "Synthadoc: Web search (coming in v2)...",
+            callback: () => new Notice("Synthadoc: Web search is coming in v2 — not yet available"),
+        });
+
+        this.addCommand({
             id: "synthadoc-lint",
             name: "Synthadoc: Run lint",
             callback: async () => {

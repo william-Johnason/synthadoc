@@ -176,6 +176,34 @@ describe("SynthadocPlugin.ingestFile", () => {
     });
 });
 
+describe("SynthadocPlugin web search command", () => {
+    it("shows coming-in-v2 notice and does not call api.ingest", async () => {
+        const { api } = await import("./api");
+        const { Notice } = await import("obsidian");
+
+        const { default: SynthadocPlugin } = await import("./main");
+        const plugin = new SynthadocPlugin();
+        await plugin.onload();
+
+        const cmd = (plugin.addCommand as any).mock.calls.find(
+            (c: any) => c[0].id === "synthadoc-web-search"
+        )?.[0];
+        cmd?.callback();
+
+        expect(Notice).toHaveBeenCalledWith(expect.stringContaining("coming in v2"));
+        expect(api.ingest).not.toHaveBeenCalled();
+    });
+
+    it("web-search command is registered on onload", async () => {
+        const { default: SynthadocPlugin } = await import("./main");
+        const plugin = new SynthadocPlugin();
+        await plugin.onload();
+
+        const ids = (plugin.addCommand as any).mock.calls.map((c: any) => c[0].id);
+        expect(ids).toContain("synthadoc-web-search");
+    });
+});
+
 describe("SynthadocPlugin.ingestAllSources", () => {
     it("queues every file under rawSourcesFolder and shows summary", async () => {
         const { api } = await import("./api");
