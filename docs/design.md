@@ -744,6 +744,7 @@ cron = "0 3 * * 0"   # every Sunday at 03:00
 | `queue.max_parallel_ingest` | int | `4` | Max concurrent ingest agents |
 | `queue.max_retries` | int | `3` | Retries before job → dead |
 | `queue.backoff_base_seconds` | int | `5` | Exponential backoff base (±20% jitter) |
+| `cache.version` | str | `"4"` | Bump to invalidate all cached LLM responses without touching source code |
 | `cost.soft_warn_usd` | float | `0.50` | Log warning, continue _(inactive in v0.1 — see note below)_ |
 | `cost.hard_gate_usd` | float | `2.00` | Require explicit confirmation _(inactive in v0.1 — see note below)_ |
 | `cost.auto_resolve_confidence_threshold` | float | `0.85` | Auto-apply lint resolutions above this score |
@@ -845,22 +846,29 @@ Stores deterministic LLM responses keyed by a hash of the operation type and ful
 **Cache key:**
 
 ```python
-CACHE_VERSION = "4"
-
-def make_cache_key(operation: str, inputs: dict) -> str:
-    payload = {"v": CACHE_VERSION, "op": operation, "inputs": inputs}
+def make_cache_key(operation: str, inputs: dict, version: str = CACHE_VERSION) -> str:
+    payload = {"v": version, "op": operation, "inputs": inputs}
     digest = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
     return digest[:32]
 ```
 
-Bump `CACHE_VERSION` whenever prompt templates change. Old entries remain in `cache.db` but stop matching keys.
+The version is part of every cache key, so bumping it causes all existing entries to be bypassed (they remain in `cache.db` but no longer match any key).
+
+To invalidate the cache without touching source code, set `version` in `.synthadoc/config.toml`:
+
+```toml
+[cache]
+version = "5"   # bump to bypass all entries cached under previous versions
+```
+
+The default (`"4"`) is defined in `synthadoc/core/cache.py`. Custom skill authors and wiki operators can bump this freely without modifying core code.
 
 **Invalidation triggers:**
 
 | Trigger | Behavior |
 |---------|----------|
 | Source content changes | New SHA-256 → cache miss → fresh LLM call |
-| `CACHE_VERSION` bumped | All old entries bypassed |
+| `[cache] version` bumped in config | All old entries bypassed |
 | `ingest --force` | `bust_cache=True` → skips `cache.get()`, repopulates |
 | `cache clear` | Deletes all rows from `cache.db` |
 

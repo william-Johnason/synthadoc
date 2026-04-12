@@ -67,6 +67,7 @@ class Orchestrator:
                 store=self._store, search=self._search,
                 log_writer=self._log, audit_db=self._audit,
                 cache=self._cache, max_pages=self._cfg.ingest.max_pages_per_ingest,
+                cache_version=self._cfg.cache.version,
             )
             result = await agent.ingest(source, force=force, bust_cache=force)
             # Fan out web search child sources as individual ingest jobs

@@ -66,6 +66,11 @@ class CostConfig:
 
 
 @dataclass
+class CacheConfig:
+    version: str = "4"   # bump to invalidate all cached LLM responses
+
+
+@dataclass
 class IngestConfig:
     max_pages_per_ingest: int = 15
     chunk_size: int = 1500
@@ -118,6 +123,7 @@ class WebSearchConfig:
 @dataclass
 class Config:
     agents: AgentsConfig
+    cache: CacheConfig = field(default_factory=CacheConfig)
     cost: CostConfig = field(default_factory=CostConfig)
     ingest: IngestConfig = field(default_factory=IngestConfig)
     queue: QueueConfig = field(default_factory=QueueConfig)
@@ -256,6 +262,10 @@ def _raw_to_config(raw: dict, source_has_agents: bool) -> Config:
         reload=sv.get("reload", False),
     )
 
+    # --- cache ---
+    cv = raw.get("cache", {})
+    cache = CacheConfig(version=str(cv.get("version", "4")))
+
     # --- schedule ---
     sched_raw = raw.get("schedule", {})
     jobs_raw = sched_raw.get("jobs", [])
@@ -277,6 +287,7 @@ def _raw_to_config(raw: dict, source_has_agents: bool) -> Config:
 
     return Config(
         agents=agents,
+        cache=cache,
         cost=cost,
         ingest=ingest,
         queue=queue,

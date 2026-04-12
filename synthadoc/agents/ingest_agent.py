@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Optional
 
 from synthadoc.agents.skill_agent import SkillAgent
-from synthadoc.core.cache import CacheManager, make_cache_key
+from synthadoc.core.cache import CACHE_VERSION, CacheManager, make_cache_key
 from synthadoc.providers.base import LLMProvider, Message
 from synthadoc.storage.log import AuditDB, LogWriter
 from synthadoc.storage.search import HybridSearch
@@ -132,7 +132,8 @@ def _slugify(title: str) -> str:
 class IngestAgent:
     def __init__(self, provider: LLMProvider, store: WikiStorage, search: HybridSearch,
                  log_writer: LogWriter, audit_db: AuditDB, cache: CacheManager,
-                 max_pages: int = 15, wiki_root: Optional[Path] = None) -> None:
+                 max_pages: int = 15, wiki_root: Optional[Path] = None,
+                 cache_version: str = CACHE_VERSION) -> None:
         self._provider = provider
         self._store = store
         self._search = search
@@ -141,13 +142,14 @@ class IngestAgent:
         self._cache = cache
         self._max_pages = max_pages
         self._wiki_root = Path(wiki_root) if wiki_root is not None else None
+        self._cache_version = cache_version
         self._skill_agent = SkillAgent()
         self._purpose = self._load_purpose()
 
     async def _analyse(self, text: str, bust_cache: bool = False) -> dict:
         """Step 1 — analysis pass: entity extraction + summary. Cached by content hash."""
         text_hash = hashlib.sha256(text.encode()).hexdigest()
-        ck = make_cache_key("analyse-v1", {"text_hash": text_hash})
+        ck = make_cache_key("analyse-v1", {"text_hash": text_hash}, version=self._cache_version)
         if not bust_cache:
             cached = await self._cache.get(ck)
             if cached:
@@ -333,7 +335,7 @@ class IngestAgent:
         # Pass 3: decision (cached by summary hash + candidate slugs)
         slugs = [r.slug for r in candidates]
         summary_hash = hashlib.sha256(summary.encode()).hexdigest()
-        ck2 = make_cache_key("make-decision", {"text_hash": summary_hash, "slugs": slugs})
+        ck2 = make_cache_key("make-decision", {"text_hash": summary_hash, "slugs": slugs}, version=self._cache_version)
         cached2 = None if bust_cache else await self._cache.get(ck2)
         if cached2:
             result.cache_hits += 1
