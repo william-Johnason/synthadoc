@@ -133,40 +133,32 @@ RAG chunks documents and retrieves them at query time. Synthadoc **compiles** kn
 
 ```mermaid
 flowchart TB
-    subgraph ACCESS["Access Layer  ·  -w flag selects the target wiki"]
+    subgraph ACCESS["Access Layer  ·  -w flag targets a specific wiki"]
         direction LR
-        CLI["synthadoc CLI\n(thin HTTP client)"]
-        OBS["Obsidian Plugin\n(TypeScript)"]
-        MCPC["Claude Desktop\n(MCP · optional)"]
+        CLI["synthadoc CLI\nthin HTTP client"]
+        OBS["Obsidian Plugin\nTypeScript"]
+        MCPC["Claude Desktop\nMCP · optional"]
     end
 
-    subgraph MULTI["One isolated process per wiki domain  ·  each on its own port"]
+    subgraph WIKIS["Synthadoc Engine  ·  one isolated process per wiki  ·  each on its own port"]
         direction LR
-        subgraph WA["wiki-A  ·  port 7070"]
-            EA["HTTP Server + Job Worker\nOrchestrator"]
-            SA[("wiki-A/\nwiki/*.md · audit.db\njobs.db · cache.db")]
-        end
-        subgraph WB["wiki-B  ·  port 7071"]
-            EB["HTTP Server + Job Worker\nOrchestrator"]
-            SB[("wiki-B/\nwiki/*.md · audit.db\njobs.db · cache.db")]
-        end
-        MORE["  ···  \nn wikis"]
+        WA["wiki-A  ·  port 7070\nHTTP · Job Worker · Storage"]
+        WB["wiki-B  ·  port 7071\nHTTP · Job Worker · Storage"]
+        WN["···\nn wikis"]
     end
 
-    subgraph SHARED["Shared Engine Components  ·  loaded into every instance"]
+    subgraph SHARED["Shared Components  ·  loaded into every instance"]
         direction LR
-        AGENTS["Agents\nIngest · Query · Lint"]
-        SKILLS["Skills\npdf · url · docx · xlsx · image · web_search · custom"]
-        PROVIDERS["Providers\nAnthropic · OpenAI · Gemini · Groq · Ollama"]
-        OPS["Hooks · Scheduler\nAudit · OpenTelemetry"]
+        AG["Agents\nIngest · Query · Lint"]
+        SK["Skills\npdf · url · docx · image · web_search · custom"]
+        PR["Providers\nAnthropic · OpenAI · Gemini · Groq · Ollama"]
+        OP["Ops\nHooks · Scheduler · Audit · OpenTelemetry"]
     end
 
-    CLI -- "-w selects wiki" --> MULTI
-    OBS --> MULTI
-    MCPC -. "MCP stdio (optional)" .-> MULTI
-    EA --- SA
-    EB --- SB
-    MULTI --> SHARED
+    CLI -- "-w selects wiki" --> WIKIS
+    OBS --> WIKIS
+    MCPC -. "MCP stdio" .-> WIKIS
+    WIKIS --> SHARED
 ```
 
 For full architecture details, data models, API reference, and plugin development guide see **[docs/design.md](docs/design.md)**.

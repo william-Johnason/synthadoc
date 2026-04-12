@@ -129,42 +129,34 @@ The filename without extension, derived from the page title. ASCII-safe and CJK-
 
 ```mermaid
 flowchart TB
-    subgraph ACCESS["Access Layer  ·  -w flag selects the target wiki"]
+    subgraph ACCESS["Access Layer  ·  -w flag targets a specific wiki"]
         direction LR
-        CLI["synthadoc CLI\n(thin HTTP client)"]
-        OBS["Obsidian Plugin\n(TypeScript)"]
-        MCPC["Claude Desktop\n(MCP client — optional)"]
+        CLI["synthadoc CLI\nthin HTTP client"]
+        OBS["Obsidian Plugin\nTypeScript"]
+        MCPC["Claude Desktop\nMCP · optional"]
     end
 
-    subgraph MULTI["One isolated process per wiki domain  ·  each on its own port"]
+    subgraph WIKIS["Synthadoc Engine  ·  one isolated process per wiki  ·  each on its own port"]
         direction LR
-        subgraph WA["wiki-A  ·  port 7070"]
-            EA["HTTP REST · Job Worker\nOrchestrator\nCORS · 10 MB · 60s timeout"]
-            SA[("wiki-A/\nwiki/*.md · audit.db\njobs.db · cache.db · embeddings.db")]
-        end
-        subgraph WB["wiki-B  ·  port 7071"]
-            EB["HTTP REST · Job Worker\nOrchestrator\nCORS · 10 MB · 60s timeout"]
-            SB[("wiki-B/\nwiki/*.md · audit.db\njobs.db · cache.db · embeddings.db")]
-        end
-        MORE["  ···  \nn wikis"]
-        MCP["MCP Server\nstdio · 6 tools\n(one per wiki · optional)"]
+        WA["wiki-A  ·  port 7070\nHTTP REST · Job Worker · Orchestrator\nwiki-A/ — wiki · audit · jobs · cache"]
+        WB["wiki-B  ·  port 7071\nHTTP REST · Job Worker · Orchestrator\nwiki-B/ — wiki · audit · jobs · cache"]
+        WN["···\nn wikis"]
+        MCP["MCP Server\nstdio · 6 tools\none per wiki · optional"]
     end
 
-    subgraph SHARED["Shared Engine Components  ·  loaded into every instance"]
+    subgraph SHARED["Shared Components  ·  loaded into every instance"]
         direction LR
-        AGENTS["Agents\nIngest · Query · Lint"]
-        SKILLS["Skills (lazy-loaded)\npdf · url · markdown · docx\nxlsx · image · web_search · custom"]
-        PROVIDERS["Providers\nAnthropic · OpenAI · Gemini\nGroq · Ollama · Custom"]
-        INFRA["CostGuard · Cache (3-layer)\nJobQueue · Hooks dispatcher"]
-        OPS["Admin & Ops\nScheduler · Audit · OpenTelemetry"]
+        AG["Agents\nIngest · Query · Lint"]
+        SK["Skills  (lazy-loaded)\npdf · url · docx · image · web_search · custom"]
+        PR["Providers\nAnthropic · OpenAI · Gemini · Groq · Ollama · Custom"]
+        INFRA["Core\nCostGuard · Cache · JobQueue · Hooks"]
+        OP["Ops\nScheduler · Audit · OpenTelemetry"]
     end
 
-    CLI -- "-w selects wiki" --> MULTI
-    OBS --> MULTI
-    MCPC -. "MCP stdio (optional)" .-> MCP
-    EA --- SA
-    EB --- SB
-    MULTI --> SHARED
+    CLI -- "-w selects wiki" --> WIKIS
+    OBS --> WIKIS
+    MCPC -. "MCP stdio" .-> MCP
+    WIKIS --> SHARED
 ```
 
 ### Request lifecycle (ingest via CLI)
