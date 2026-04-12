@@ -210,6 +210,23 @@ You can switch at any time by changing the `provider` line in `.synthadoc/config
 | `groq` | `GROQ_API_KEY` | Yes (Llama/Mixtral models) |
 | `ollama` | _(none)_ | Yes (fully local) |
 
+#### Tavily (web search — optional)
+
+Web search ingestion (Step 10) requires a Tavily API key. Get a free key at
+**tavily.com** (1,000 searches/month, no credit card required).
+
+**Windows (cmd.exe):**
+```cmd
+set TAVILY_API_KEY=tvly-your-key-here
+```
+**Linux / macOS:**
+```bash
+export TAVILY_API_KEY="tvly-your-key-here"
+```
+
+If this key is not set, the server starts normally but web search jobs will fail.
+Skip this step if you do not plan to use Step 10.
+
 ---
 
 ## Part 2 — Demo Walkthrough
