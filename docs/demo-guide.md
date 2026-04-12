@@ -101,8 +101,8 @@ Open Obsidian → **Open folder as vault** → select the installed folder
 
 > **Tip — show all file types in the explorer:** By default Obsidian only displays
 > file types it natively understands. `.xlsx` and `.pptx` files in `raw_sources/`
-> will be hidden. To show them: **Settings → Files and links → Detect all file
-> extensions** → toggle **on**. The files are always present on disk and synthadoc
+> will be hidden. To show them: **Settings → Files and links → Show all file types**
+> → toggle **on**. The files are always present on disk and synthadoc
 > reads them regardless of this setting — this is purely a display preference.
 
 ---
