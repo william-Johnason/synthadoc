@@ -411,8 +411,17 @@ synthadoc ingest https://example.com/article -w my-wiki
 # Entire folder (parallel, up to max_parallel_ingest at a time)
 synthadoc ingest --batch raw_sources/ -w my-wiki
 
-# Manifest file (one path or URL per line)
-synthadoc ingest --batch --file sources.txt -w my-wiki
+# Manifest file — ingest a curated list of sources in one shot.
+# sources.txt: one entry per line; each line is either an absolute file path
+# (PDF, DOCX, PPTX, MD, …) or a URL. Blank lines and # comments are ignored.
+# Each entry becomes a separate job in the queue, processed sequentially.
+#
+# Example sources.txt:
+#   /home/user/docs/research-paper.pdf
+#   /home/user/slides/keynote.pptx
+#   https://en.wikipedia.org/wiki/Alan_Turing
+#   # this line is ignored
+synthadoc ingest --file sources.txt -w my-wiki
 
 # Force re-ingest (bypass deduplication and cache)
 synthadoc ingest --force report.pdf -w my-wiki
