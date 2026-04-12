@@ -243,6 +243,12 @@ Expected output:
 HTTP API running on http://127.0.0.1:7070
 ```
 
+![synthadoc serve startup](synthadoc-serve.png)
+
+The banner confirms the mode (`HTTP + MCP`), port, wiki path, and PID. If you see
+`Warning: TAVILY_API_KEY is not set`, web search jobs will not work — set the key
+before Step 10 if you plan to use that feature.
+
 Use a **second terminal** for all commands below. All plugin commands are now active.
 
 > **Ribbon icon:** The Synthadoc book icon is in the narrow vertical strip on the far left
