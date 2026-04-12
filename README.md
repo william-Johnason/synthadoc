@@ -115,6 +115,7 @@ Every page is a plain Markdown file with YAML frontmatter. No proprietary format
 | Web search → wiki pages | **Yes** | No | No | No |
 | Free LLM tier support | **Yes** (Gemini, Groq) | No | No | No |
 | Auto wiki overview page | **Yes** | No | No | No |
+| Resumable job queue + retry | **Yes** | No | No | No |
 
 ### Key differentiators vs. RAG
 
@@ -124,6 +125,7 @@ RAG chunks documents and retrieves them at query time. Synthadoc **compiles** kn
 - **Knowledge is linked, not scattered.** `[[wikilinks]]` connect related pages into a navigable graph visible in Obsidian and queryable with Dataview.
 - **The artifact outlives the tool.** Close the server, open the wiki folder in any Markdown editor — the knowledge is all there, human-readable, no proprietary format.
 - **Cost-efficient at scale.** Two-step ingest with cached analysis means repeated ingest of similar sources costs near-zero tokens. Three cache layers stack for lint and query too.
+- **Ingest is durable, not fragile.** Every ingest request becomes a queued job with automatic retry and a persistent audit record. Batch a hundred documents and resume after a crash — no work is lost.
 
 ---
 
