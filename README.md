@@ -526,20 +526,21 @@ synthadoc uninstall my-wiki
 ### Health and status
 
 ```bash
-# Wiki statistics: pages, queue depth, spend, cache hit rate
+# Wiki statistics: pages, queue depth, cache hit rate
 synthadoc status -w my-wiki
 
 # Liveness probe (useful in scripts and monitoring)
+# Port is per-wiki — check [server] port in <wiki-root>/.synthadoc/config.toml
+# Default is 7070; each additional wiki uses its own port (7071, 7072, …)
 curl http://127.0.0.1:7070/health
 ```
 
 Expected `status` output:
 ```
-Wiki: my-wiki  |  Pages: 34  |  Sources: 12
-Last ingest: 4 min ago (report.pdf)
-Queue: 0 jobs pending  |  Dead jobs: 1
-Token spend (30d): $1.84  |  Cache savings: $0.72 (28%)
-Contradictions: 2 unresolved  |  Orphan pages: 1
+Wiki:         /home/user/wikis/my-wiki
+Pages:        34
+Jobs pending: 0
+Jobs total:   12
 ```
 
 ### Logs
