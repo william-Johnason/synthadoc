@@ -594,10 +594,8 @@ synthadoc audit events --json -w my-wiki    # raw JSON
 ### Cache management
 
 ```bash
-# Show cache stats (in status output)
-synthadoc status -w my-wiki
-
-# Wipe all LLM response cache entries
+# Remove all cached LLM responses
+# Output: "Cache cleared: N entries removed."
 synthadoc cache clear -w my-wiki
 ```
 
