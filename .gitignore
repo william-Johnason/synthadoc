@@ -11,13 +11,12 @@ build/
 venv/
 node_modules/
 obsidian-plugin/node_modules/
-/history-of-computing/
 .VSCodeCounter/
 
 # synthadoc operational — never commit
 .synthadoc/
 docs/plans/
-examples/*/log.md
+synthadoc/demos/*/log.md
 
 # diagram sources — export to PNG/SVG and commit the image instead
 *.drawio
