@@ -81,11 +81,6 @@ vault in one sequence. **Obsidian must already be installed** (download from obs
 synthadoc install history-of-computing --target %USERPROFILE%\wikis --demo
 ```
 
-**Windows (PowerShell):**
-```powershell
-synthadoc install history-of-computing --target $env:USERPROFILE\wikis --demo
-```
-
 **Linux / macOS:**
 ```bash
 synthadoc install history-of-computing --target ~/wikis --demo
