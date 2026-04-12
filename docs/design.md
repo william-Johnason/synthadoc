@@ -285,6 +285,7 @@ This means importing 20 skills costs essentially zero memory until they are need
 | `url` | `http://`, `https://` | `fetch url`, `web page`, `website` | httpx fetch + BeautifulSoup clean |
 | `markdown` | `.md`, `.txt` | `markdown`, `text file`, `notes` | Direct read |
 | `docx` | `.docx` | `word document`, `docx` | python-docx |
+| `pptx` | `.pptx` | `powerpoint`, `presentation`, `pptx` | python-pptx; each slide rendered as a titled section; speaker notes appended when present |
 | `xlsx` | `.xlsx`, `.csv` | `spreadsheet`, `excel`, `csv` | openpyxl |
 | `image` | `.png`, `.jpg`, `.jpeg`, `.webp`, `.gif`, `.tiff` | `image`, `screenshot`, `diagram`, `photo` | Base64 + vision LLM |
 | `web_search` | _(none)_ | `search for`, `find on the web`, `look up`, `web search`, `browse` | Calls Tavily API; returns top result URLs as child sources enqueued individually. Requires `TAVILY_API_KEY`. |
@@ -544,7 +545,7 @@ Calls `GET /health` and `GET /status` in parallel (`Promise.allSettled`).
 
 ### Supported ingest formats
 
-`.md`, `.txt`, `.pdf`, `.docx`, `.xlsx`, `.csv`, `.png`, `.jpg`, `.jpeg`, `.webp`, `.gif`, `.tiff`
+`.md`, `.txt`, `.pdf`, `.docx`, `.pptx`, `.xlsx`, `.csv`, `.png`, `.jpg`, `.jpeg`, `.webp`, `.gif`, `.tiff`
 
 ---
 

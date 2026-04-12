@@ -57,6 +57,7 @@ automatically.
 | `url` | `https://` / `http://` prefix · phrases: `fetch url`, `web page`, `website` | httpx + BeautifulSoup HTML cleaning |
 | `markdown` | `.md` / `.txt` extension · phrases: `markdown`, `text file`, `notes` | Direct read, no transformation |
 | `docx` | `.docx` extension · phrases: `word document`, `docx` | python-docx paragraph extraction |
+| `pptx` | `.pptx` extension · phrases: `powerpoint`, `presentation`, `pptx` | python-pptx; each slide as a titled section; speaker notes included |
 | `xlsx` | `.xlsx` / `.csv` extension · phrases: `spreadsheet`, `excel`, `csv` | openpyxl + stdlib csv |
 | `image` | `.png` `.jpg` `.jpeg` `.webp` `.gif` `.tiff` · phrases: `image`, `screenshot`, `diagram`, `photo` | Base64 → vision LLM |
 | `web_search` | Intent phrases only: `search for`, `find on the web`, `look up`, `web search`, `browse` | No file extension — purely intent-driven. Calls Tavily API; fans out top result URLs as individual ingest jobs. Requires `TAVILY_API_KEY`. |

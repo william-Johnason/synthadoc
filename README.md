@@ -140,7 +140,7 @@ For full architecture details, data models, API reference, and plugin developmen
 ## What's Included in v0.1
 
 - **3 agents** — IngestAgent (two-step cached synthesis), QueryAgent (BM25 + LLM), LintAgent (contradiction + orphan detection + auto-resolution)
-- **7 built-in skills** — PDF, URL, Markdown/TXT, DOCX, XLSX/CSV, Image (vision), **Web search (Tavily — fully live)**
+- **8 built-in skills** — PDF, URL, Markdown/TXT, DOCX, PPTX, XLSX/CSV, Image (vision), **Web search (Tavily — fully live)**
 - **Folder-based skill system** — each skill is a self-contained folder with a `SKILL.md` manifest; intent-based dispatch alongside extension matching; drop a folder in `skills/` to add a new format without touching core code
 - **3 access surfaces** — CLI (thin HTTP client), HTTP REST API, MCP server
 - **Obsidian plugin** — ingest (with file picker when no note is active), query (responsive modal, stays open), lint report, jobs list — all from the command palette; ribbon shows engine health + page count
