@@ -127,37 +127,10 @@ The filename without extension, derived from the page title. ASCII-safe and CJK-
 
 ### Component Map
 
-```mermaid
-flowchart TB
-    subgraph ACCESS["Access Layer  ·  -w flag targets a specific wiki"]
-        direction LR
-        CLI["synthadoc CLI\nthin HTTP client"]
-        OBS["Obsidian Plugin\nTypeScript"]
-        MCPC["Claude Desktop\nMCP · optional"]
-    end
+![Synthadoc Architecture](architecture.png)
 
-    subgraph WIKIS["Synthadoc Engine  ·  one isolated process per wiki  ·  each on its own port"]
-        direction LR
-        WA["wiki-A  ·  port 7070\nHTTP REST · Job Worker · Orchestrator\nwiki-A/ — wiki · audit · jobs · cache"]
-        WB["wiki-B  ·  port 7071\nHTTP REST · Job Worker · Orchestrator\nwiki-B/ — wiki · audit · jobs · cache"]
-        WN["···\nn wikis"]
-        MCP["MCP Server\nstdio · 6 tools\none per wiki · optional"]
-    end
-
-    subgraph SHARED["Shared Components  ·  loaded into every instance"]
-        direction LR
-        AG["Agents\nIngest · Query · Lint"]
-        SK["Skills  (lazy-loaded)\npdf · url · docx · image · web_search · custom"]
-        PR["Providers\nAnthropic · OpenAI · Gemini · Groq · Ollama · Custom"]
-        INFRA["Core\nCostGuard · Cache · JobQueue · Hooks"]
-        OP["Ops\nScheduler · Audit · OpenTelemetry"]
-    end
-
-    CLI -- "-w selects wiki" --> WIKIS
-    OBS --> WIKIS
-    MCPC -. "MCP stdio" .-> MCP
-    WIKIS --> SHARED
-```
+> Diagram source: `docs/architecture.drawio` (draw.io, not tracked in git).
+> To update: open in [draw.io](https://app.diagrams.net), edit, export as PNG to `docs/architecture.png`, commit the PNG.
 
 ### Request lifecycle (ingest via CLI)
 

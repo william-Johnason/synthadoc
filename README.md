@@ -131,35 +131,7 @@ RAG chunks documents and retrieves them at query time. Synthadoc **compiles** kn
 
 ## Architecture
 
-```mermaid
-flowchart TB
-    subgraph ACCESS["Access Layer  ·  -w flag targets a specific wiki"]
-        direction LR
-        CLI["synthadoc CLI\nthin HTTP client"]
-        OBS["Obsidian Plugin\nTypeScript"]
-        MCPC["Claude Desktop\nMCP · optional"]
-    end
-
-    subgraph WIKIS["Synthadoc Engine  ·  one isolated process per wiki  ·  each on its own port"]
-        direction LR
-        WA["wiki-A  ·  port 7070\nHTTP · Job Worker · Storage"]
-        WB["wiki-B  ·  port 7071\nHTTP · Job Worker · Storage"]
-        WN["···\nn wikis"]
-    end
-
-    subgraph SHARED["Shared Components  ·  loaded into every instance"]
-        direction LR
-        AG["Agents\nIngest · Query · Lint"]
-        SK["Skills\npdf · url · docx · image · web_search · custom"]
-        PR["Providers\nAnthropic · OpenAI · Gemini · Groq · Ollama"]
-        OP["Ops\nHooks · Scheduler · Audit · OpenTelemetry"]
-    end
-
-    CLI -- "-w selects wiki" --> WIKIS
-    OBS --> WIKIS
-    MCPC -. "MCP stdio" .-> WIKIS
-    WIKIS --> SHARED
-```
+![Synthadoc Architecture](docs/architecture.png)
 
 For full architecture details, data models, API reference, and plugin development guide see **[docs/design.md](docs/design.md)**.
 
