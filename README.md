@@ -306,50 +306,65 @@ The guide covers:
 
 ## Configuration
 
+> **You do not need to configure anything to run the demo.** The demo wiki
+> ships with its own settings and sensible built-in defaults cover everything
+> else. Set your API key env var, run `synthadoc serve`, and go.
+>
+> Read this section when you are ready to run a real wiki or change a default.
+
+### How configuration works
+
+Settings are resolved in three layers — later layers win:
+
+```
+1. Built-in defaults          (always applied)
+2. ~/.synthadoc/config.toml   (global — your preferences across all wikis)
+3. <wiki-root>/.synthadoc/config.toml   (per-project — overrides for one wiki)
+```
+
+Neither file is required. If both are absent, the built-in defaults take effect.
+
 ### Global config — `~/.synthadoc/config.toml`
+
+**Use this to set preferences that apply to every wiki on your machine** —
+primarily your default LLM provider and the wiki registry.
 
 ```toml
 [agents]
-default = { provider = "anthropic", model = "claude-opus-4-6" }
-lint    = { model = "claude-haiku-4-5-20251001" }   # cheaper model for lint
+default = { provider = "gemini", model = "gemini-2.0-flash" }  # free tier
+lint    = { provider = "groq",   model = "llama-3.3-70b-versatile" }  # cheaper for lint
 
 [wikis]
 research = "~/wikis/research"
 work     = "~/wikis/work"
 ```
 
-To switch to Gemini Flash (free tier):
-
-```toml
-[agents]
-default = { provider = "gemini", model = "gemini-2.0-flash" }
-```
+Common reason to edit: switching from the Anthropic default to Gemini Flash
+(free tier) so all wikis use it without touching each project config.
 
 ### Per-project config — `<wiki-root>/.synthadoc/config.toml`
 
+**Use this when one wiki needs different settings from the global default** —
+a different port, tighter cost limits, wiki-specific hooks, or web search.
+
 ```toml
 [server]
-port = 7071          # each wiki needs its own port
+port = 7071          # required if running more than one wiki simultaneously
 
 [cost]
 soft_warn_usd = 0.50
 hard_gate_usd = 2.00
 
-[ingest]
-max_pages_per_ingest = 15
-
 [web_search]
 provider    = "tavily"
-max_results = 20         # URLs fetched per query; each becomes an ingest job
-
-[logs]
-level        = "INFO"   # DEBUG | INFO | WARNING | ERROR
-max_file_mb  = 5
-backup_count = 5
+max_results = 20
 
 [hooks]
-on_ingest_complete = "python hooks/auto_commit.py"
+on_ingest_complete = "python git-auto-commit.py"
 ```
+
+Common reason to edit: each wiki needs its own port when running multiple
+wikis at the same time.
 
 Full config reference: [docs/design.md — Configuration](docs/design.md#configuration).
 
