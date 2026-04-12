@@ -32,6 +32,8 @@ _NAME = r"""
   +--------------------------------------------+
 """
 
+_REPO_URL = "https://github.com/Axoviq-ai/synthadoc"
+
 # ──────────────────────────────────────────────
 #  ANSI helpers
 # ──────────────────────────────────────────────
@@ -77,7 +79,7 @@ def print_banner(
         _c(_WHITE,          f"  Wiki:  {wiki}", use_color),
         _c(_WHITE,          f"  PID:   {os.getpid()}", use_color),
         "",
-        _c(_DIM,            "  https://github.com/paulmchen/synthadoc", use_color),
+        _c(_DIM,            f"  {_REPO_URL}", use_color),
     ]
 
     # Pad shorter list so we can zip
@@ -105,6 +107,6 @@ def banner_text(version: str = "0.1.0") -> str:
     lines.append("")
     lines.extend(name_lines)
     lines.append(f"  Version {version}  —  Domain-agnostic LLM wiki engine")
-    lines.append("  https://github.com/paulmchen/synthadoc")
+    lines.append(f"  {_REPO_URL}")
     lines.append("")
     return "\n".join(lines)
