@@ -127,56 +127,61 @@ The filename without extension, derived from the page title. ASCII-safe and CJK-
 
 ### Component Map
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│  Access layer                                                    │
-│                                                                  │
-│  synthadoc CLI          Obsidian plugin       Claude Desktop     │
-│  (thin HTTP client)     (TypeScript)          (MCP client)       │
-└───────┬─────────────────────────┬──────────────────┬────────────┘
-        │  HTTP REST              │  HTTP REST        │  MCP stdio
-        ▼                         ▼                   ▼
-┌──────────────────────────────────────────────────────────────────┐
-│  Integration layer                                               │
-│                                                                  │
-│  FastAPI (http_server.py)            MCP server (mcp_server.py)  │
-│  localhost:PORT                      stdio transport             │
-│  CORS: obsidian.md, localhost        6 tools                     │
-│  10 MB body limit, 60s timeout                                   │
-│  Background job worker (2s poll)                                 │
-└──────────────────────┬───────────────────────────────────────────┘
-                       │
-┌──────────────────────▼───────────────────────────────────────────┐
-│  Core layer                                                      │
-│                                                                  │
-│  Orchestrator         CostGuard           Scheduler              │
-│  ├─ IngestAgent       ├─ soft_warn_usd    ├─ cron expressions    │
-│  ├─ QueryAgent        └─ hard_gate_usd    └─ OS task scheduler   │
-│  └─ LintAgent                                                    │
-│                                                                  │
-│  Job Queue (SQLite, asyncio)                                     │
-│  Cache (3-layer)                                                 │
-│  Hooks dispatcher                                                │
-└──────────────────────┬───────────────────────────────────────────┘
-                       │
-┌──────────────────────▼───────────────────────────────────────────┐
-│  Skill layer (lazy-loaded)                                       │
-│                                                                  │
-│  SkillAgent → pdf / url / markdown / docx / xlsx / image         │
-│             → custom skills (wiki skills/ or ~/.synthadoc/skills/)│
-└──────────────────────┬───────────────────────────────────────────┘
-                       │
-┌──────────────────────▼───────────────────────────────────────────┐
-│  Provider layer                                                  │
-│                                                                  │
-│  Anthropic  OpenAI  Gemini  Groq  Ollama  Custom             │
-└──────────────────────┬───────────────────────────────────────────┘
-                       │
-┌──────────────────────▼───────────────────────────────────────────┐
-│  Storage layer                                                   │
-│                                                                  │
-│  wiki/*.md  audit.db  jobs.db  cache.db  embeddings.db  logs/    │
-└──────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph ACCESS["Access Layer"]
+        CLI["synthadoc CLI\n(thin HTTP client)"]
+        OBS["Obsidian Plugin\n(TypeScript)"]
+        MCP_C["Claude Desktop\n(MCP client — optional)"]
+    end
+
+    subgraph INTEGRATION["Integration Layer  ·  http_server.py  ·  mcp_server.py"]
+        HTTP["Synthadoc Engine\nHTTP REST · localhost:PORT\nCORS · 10 MB limit · 60s timeout\nBackground job worker (2s poll)"]
+        MCP["MCP Server\nstdio transport\n6 tools"]
+    end
+
+    subgraph CORE["Core Layer"]
+        ORCH["Orchestrator"]
+        AGENTS["IngestAgent\nQueryAgent\nLintAgent"]
+        INFRA["CostGuard\nJobQueue (SQLite)\nCache (3-layer)\nHooks dispatcher\nScheduler"]
+    end
+
+    subgraph SKILLS["Skill Layer  ·  lazy-loaded"]
+        SA["SkillAgent"]
+        BUILTIN["pdf · url · markdown\ndocx · xlsx · image\nweb_search"]
+        CUSTOM["Custom skills\nwiki/skills/\n~/.synthadoc/skills/"]
+    end
+
+    subgraph PROVIDERS["Provider Layer"]
+        P["Anthropic · OpenAI · Gemini\nGroq · Ollama · Custom"]
+    end
+
+    subgraph STORAGE["Storage Layer"]
+        S["wiki/*.md · audit.db · jobs.db\ncache.db · embeddings.db · logs/"]
+    end
+
+    subgraph ADMIN["Admin & Ops"]
+        OT["OpenTelemetry\ntraces.jsonl / OTLP"]
+        SCHED["OS Scheduler\ncrontab / schtasks"]
+        HOOKS["Hook Scripts\nhooks/*.py"]
+    end
+
+    CLI -- "HTTP REST" --> HTTP
+    OBS -- "HTTP REST" --> HTTP
+    MCP_C -. "MCP stdio (optional)" .-> MCP
+    HTTP --> ORCH
+    MCP --> ORCH
+    ORCH --> AGENTS
+    ORCH --> INFRA
+    AGENTS --> SA
+    SA --> BUILTIN
+    SA --> CUSTOM
+    AGENTS --> P
+    AGENTS --> S
+    INFRA --> S
+    INFRA --> HOOKS
+    INFRA --> SCHED
+    CORE --> OT
 ```
 
 ### Request lifecycle (ingest via CLI)
@@ -486,7 +491,7 @@ Note: BM25 IDF requires a minimum of 3 documents in the corpus for non-zero scor
   "operation": "ingest",
   "created_at": "2026-04-10T14:32:01Z",
   "payload": {"source": "report.pdf"},
-  "result": {"pages_created": ["alan-turing"], "cost_usd": 0.031},
+  "result": {"pages_created": ["alan-turing"], "cost_usd": 0.0},
   "error": null
 }
 ```
@@ -578,7 +583,7 @@ Reload the plugin (toggle off/on) after copying — a full Obsidian restart is n
 | `Synthadoc: Lint report` | Modal showing contradicted pages and orphans with remediation hints |
 | `Synthadoc: Run lint` | Queues a lint job; shows a notice with contradiction + orphan counts when complete |
 | `Synthadoc: List jobs...` | Modal with status-filter dropdown, results table, error details |
-| `Synthadoc: Web search (coming in v0.2)...` | Shows a notice — functionality lands in v0.2 |
+| `Synthadoc: Web search...` | Modal — type a plain topic, engine prepends `search for:` and enqueues an ingest job; returns job ID |
 
 ### Ribbon icon
 
@@ -616,7 +621,7 @@ synthadoc
 ├── ingest <source> [-w wiki] [--batch] [--file manifest] [--force] [--analyse-only]
 ├── query "<question>" [-w wiki] [--save]
 ├── lint
-│   ├── run [-w wiki] [--scope contradictions|orphans|all] [--since date] [--auto-resolve]
+│   ├── run [-w wiki] [--scope contradictions|orphans|all] [--auto-resolve]
 │   └── report [-w wiki]
 ├── jobs
 │   ├── list [-w wiki] [--status pending|completed|failed|dead]
@@ -625,10 +630,9 @@ synthadoc
 │   ├── delete <id> [-w wiki]
 │   └── purge --older-than <days> [-w wiki]
 ├── audit
-│   ├── history [-w wiki] [--limit N]   — recent ingest records from audit.db
-│   ├── cost [-w wiki] [--days N]       — token spend and cost summary
-│   └── events [-w wiki] [--limit N]    — audit events (contradictions, resolutions, cost gates)
-├── search "<terms>" [-w wiki]
+│   ├── history [-w wiki] [--limit N] [--json]   — ingest records: timestamp, source, page, tokens, cost
+│   ├── cost [-w wiki] [--days N] [--json]        — token totals + daily breakdown (cost always $0.00 in v0.1)
+│   └── events [-w wiki] [--limit N] [--json]    — audit events: timestamp, job_id, event type, metadata
 ├── status [-w wiki]
 ├── cache clear [-w wiki]
 └── schedule
@@ -755,8 +759,8 @@ max_file_mb  = 5
 backup_count = 5
 
 [hooks]
-on_ingest_complete     = "python hooks/auto_commit.py"
-on_contradiction_found = { cmd = "python hooks/notify.py", blocking = true }
+on_ingest_complete = "python hooks/auto_commit.py"                        # non-blocking
+on_lint_complete   = { cmd = "python hooks/notify.py", blocking = true }  # blocking
 
 [web_search]
 provider    = "tavily"   # only supported provider
@@ -1181,8 +1185,9 @@ class MyProvider(LLMProvider):
     ) -> CompletionResponse:
         # Call your API …
         return CompletionResponse(
-            content="…",
-            usage={"input_tokens": N, "output_tokens": M},
+            text="…",
+            input_tokens=N,
+            output_tokens=M,
         )
 ```
 
@@ -1219,7 +1224,7 @@ Target: week of 2026-04-25.
 | **Graph-aware retrieval** | Traverse wikilink adjacency for multi-hop queries (e.g. "What connects Turing to von Neumann?") |
 | **Larger corpus support** | Sharded BM25 index; incremental embedding updates; streaming ingest for very large documents |
 | **Mistral + Bedrock providers** | Additional OpenAI-compatible endpoints; Bedrock for AWS-native deployments |
-| **Obsidian plugin: web search modal** | Full UI for `search for:` intent — type a query, pick results, watch pages appear live |
+| **Obsidian plugin: web search live view** | Job polling + live result panel — watch pages appear as fan-out jobs complete (basic modal already in v0.1) |
 
 ---
 
@@ -1252,3 +1257,11 @@ Five providers supported: `anthropic`, `openai`, `gemini`, `groq`, `ollama`. Gem
 ### Audit CLI commands
 
 `synthadoc audit history / cost / events` query `audit.db` directly without needing `sqlite3`. See [Section 10 — CLI](#10-cli) for full usage.
+
+### Obsidian plugin: web search modal
+
+`Synthadoc: Web search...` command palette entry opens a modal where the user types a plain topic. The modal prepends `search for:` and calls `POST /jobs/ingest`. Returns a job ID immediately; pages appear in the wiki as fan-out URL jobs complete. Live result streaming (watching pages appear as they land) is planned for v0.2.
+
+### Web search intent matching
+
+All five intent phrases (`search for`, `find on the web`, `look up`, `web search`, `browse`) are now matched by a single compiled regex (`_INTENT_RE`) that strips the prefix from the query sent to Tavily. The colon after the phrase is optional — `search for quantum computing` and `search for: quantum computing` are both handled correctly.
