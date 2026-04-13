@@ -704,10 +704,27 @@ synthadoc serve -w history-of-computing
 
 #### Run it
 
-Ingest a new source:
+Drop a new file into `raw_sources/` and ingest it:
+
+**Windows (PowerShell):**
+
+```powershell
+@'
+Ada Lovelace (1815-1852) is widely regarded as the first computer programmer.
+'@ | Set-Content "$env:USERPROFILE\wikis\history-of-computing\raw_sources\ada-lovelace.txt"
+```
+
+**Linux / macOS:**
+
+```bash
+echo "Ada Lovelace (1815-1852) is widely regarded as the first computer programmer." \
+  > ~/wikis/history-of-computing/raw_sources/ada-lovelace.txt
+```
+
+Then ingest it:
 
 ```
-synthadoc ingest sources/ada-lovelace.md -w history-of-computing
+synthadoc ingest raw_sources/ada-lovelace.txt -w history-of-computing
 ```
 
 #### Verify
@@ -719,7 +736,7 @@ git log --oneline -5
 Expected output:
 
 ```
-a3f1b2c wiki: ingest ada-lovelace.md → created ada-lovelace
+a3f1b2c wiki: ingest ada-lovelace.txt → created ada-lovelace
 d9e4c81 wiki: ingest turing-award.pdf → updated alan-turing; created turing-award
 ...
 ```
