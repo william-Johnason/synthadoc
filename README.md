@@ -313,6 +313,12 @@ synthadoc serve -w market-condition-canada
 
 `--target` is the parent folder where the wiki directory will be created. `--domain` is a free-text description of the subject area — the LLM uses it to tailor the scaffold content to your domain.
 
+**Then open the wiki in Obsidian as a new vault** and install both plugins — each wiki is an independent vault, so this is required once per wiki:
+
+1. Open Obsidian → **Open folder as vault** → select the wiki folder (e.g. `~/wikis/market-condition-canada`)
+2. **Settings → Community plugins → Turn on community plugins → Browse** → install and enable **Dataview**
+3. Install and enable **Synthadoc** (or copy the plugin from an existing vault's `.obsidian/plugins/` folder)
+
 `install` creates the folder structure and, if an API key is set, runs a one-time LLM scaffold that generates four domain-aware starter files:
 
 | File | Purpose |
