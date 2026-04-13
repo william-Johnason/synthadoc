@@ -19,36 +19,36 @@ JOB    Job management errors (not found)
 from __future__ import annotations
 
 # ── Server ────────────────────────────────────────────────────────────────────
-SRV_NOT_RUNNING  = "SRV-001"   # No server listening for the requested wiki
-SRV_PORT_IN_USE  = "SRV-002"   # Port already bound by another process
-SRV_HTTP_ERROR   = "SRV-003"   # Server returned a 4xx/5xx response
-SRV_BG_CRASH     = "SRV-004"   # Background server process exited immediately
+SRV_NOT_RUNNING  = "ERR-SRV-001"   # No server listening for the requested wiki
+SRV_PORT_IN_USE  = "ERR-SRV-002"   # Port already bound by another process
+SRV_HTTP_ERROR   = "ERR-SRV-003"   # Server returned a 4xx/5xx response
+SRV_BG_CRASH     = "ERR-SRV-004"   # Background server process exited immediately
 
 # ── Wiki ──────────────────────────────────────────────────────────────────────
-WIKI_NOT_FOUND       = "WIKI-001"  # Wiki root directory does not exist
-WIKI_INVALID         = "WIKI-002"  # Directory exists but missing wiki/ subfolder
-WIKI_NOT_WRITABLE    = "WIKI-003"  # wiki/ directory is not writable
-WIKI_ALREADY_EXISTS  = "WIKI-004"  # Install target already exists on disk
-WIKI_DEMO_NOT_FOUND  = "WIKI-005"  # Unknown demo template name
-WIKI_NOT_REGISTERED  = "WIKI-006"  # Name not in ~/.synthadoc/wikis.json
+WIKI_NOT_FOUND       = "ERR-WIKI-001"  # Wiki root directory does not exist
+WIKI_INVALID         = "ERR-WIKI-002"  # Directory exists but missing wiki/ subfolder
+WIKI_NOT_WRITABLE    = "ERR-WIKI-003"  # wiki/ directory is not writable
+WIKI_ALREADY_EXISTS  = "ERR-WIKI-004"  # Install target already exists on disk
+WIKI_DEMO_NOT_FOUND  = "ERR-WIKI-005"  # Unknown demo template name
+WIKI_NOT_REGISTERED  = "ERR-WIKI-006"  # Name not in ~/.synthadoc/wikis.json
 
 # ── Config / Environment ──────────────────────────────────────────────────────
-CFG_MISSING_API_KEY  = "CFG-001"   # Required env var (API key) not set
-CFG_UNKNOWN_PROVIDER = "CFG-002"   # Provider name not recognised
+CFG_MISSING_API_KEY  = "ERR-CFG-001"   # Required env var (API key) not set
+CFG_UNKNOWN_PROVIDER = "ERR-CFG-002"   # Provider name not recognised
 
 # ── Skills ────────────────────────────────────────────────────────────────────
-SKILL_NOT_FOUND   = "SKILL-001"  # No skill matched the source string
-SKILL_MISSING_DEP = "SKILL-002"  # Required pip package not installed
-SKILL_URL_BLOCKED = "SKILL-003"  # URL returned 403 (bot/paywall protection)
-SKILL_WEB_NO_KEY  = "SKILL-004"  # TAVILY_API_KEY not set for web search
+SKILL_NOT_FOUND   = "ERR-SKILL-001"  # No skill matched the source string
+SKILL_MISSING_DEP = "ERR-SKILL-002"  # Required pip package not installed
+SKILL_URL_BLOCKED = "ERR-SKILL-003"  # URL returned 403 (bot/paywall protection)
+SKILL_WEB_NO_KEY  = "ERR-SKILL-004"  # TAVILY_API_KEY not set for web search
 
 # ── Ingest ────────────────────────────────────────────────────────────────────
-INGEST_NOT_FOUND  = "INGEST-001"  # Source file or directory not found
-INGEST_EMPTY      = "INGEST-002"  # Source file exists but is empty
-INGEST_NOT_DIR    = "INGEST-003"  # --batch target exists but is not a directory
+INGEST_NOT_FOUND  = "ERR-INGEST-001"  # Source file or directory not found
+INGEST_EMPTY      = "ERR-INGEST-002"  # Source file exists but is empty
+INGEST_NOT_DIR    = "ERR-INGEST-003"  # --batch target exists but is not a directory
 
 # ── Jobs ──────────────────────────────────────────────────────────────────────
-JOB_NOT_FOUND = "JOB-001"   # Job ID does not exist in jobs.db
+JOB_NOT_FOUND = "ERR-JOB-001"   # Job ID does not exist in jobs.db
 
 
 def cli_error(code: str, message: str, hint: str = "") -> None:
