@@ -228,9 +228,13 @@ export GEMINI_API_KEY=AIza…          # free tier — recommended starting poin
 export ANTHROPIC_API_KEY=sk-ant-…    # if using Anthropic
 export TAVILY_API_KEY=tvly-…         # optional — web search only
 
-# Windows (PowerShell) — add to your profile to persist
-$env:GEMINI_API_KEY = "AIza…"
-$env:TAVILY_API_KEY = "tvly-…"
+# Windows cmd — current session
+set GEMINI_API_KEY=AIza…
+set TAVILY_API_KEY=tvly-…
+
+# Windows cmd — permanent (open a new cmd window after running)
+setx GEMINI_API_KEY AIza…
+setx TAVILY_API_KEY tvly-…
 ```
 
 ### Step 5 — Verify
@@ -271,7 +275,7 @@ To stop a background server:
 # Linux / macOS
 kill <PID>
 
-# Windows (PowerShell or cmd.exe)
+# Windows (cmd)
 taskkill /PID <PID> /F
 ```
 

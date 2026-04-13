@@ -514,15 +514,10 @@ pages). `synthadoc status` shows page count, pending jobs, and total jobs.
 
 The demo used batch ingest. You can also ingest one file at a time:
 
-**Windows (PowerShell):**
+**Windows (cmd):**
 
-```powershell
-@'
-# Ada Lovelace
-Ada Lovelace (1815-1852) is widely regarded as the first computer programmer.
-She worked with Charles Babbage on his Analytical Engine and wrote the first
-algorithm intended to be processed by a machine.
-'@ | Set-Content "$env:USERPROFILE\wikis\history-of-computing\raw_sources\ada-lovelace.txt"
+```cmd
+(echo # Ada Lovelace & echo Ada Lovelace (1815-1852) is widely regarded as the first computer programmer. & echo She worked with Charles Babbage on his Analytical Engine and wrote the first & echo algorithm intended to be processed by a machine.) > %USERPROFILE%\wikis\history-of-computing\raw_sources\ada-lovelace.txt
 
 synthadoc ingest raw_sources/ada-lovelace.txt -w history-of-computing
 ```
@@ -706,12 +701,10 @@ synthadoc serve -w history-of-computing
 
 Drop a new file into `raw_sources/` and ingest it:
 
-**Windows (PowerShell):**
+**Windows (cmd):**
 
-```powershell
-@'
-Ada Lovelace (1815-1852) is widely regarded as the first computer programmer.
-'@ | Set-Content "$env:USERPROFILE\wikis\history-of-computing\raw_sources\ada-lovelace.txt"
+```cmd
+echo Ada Lovelace (1815-1852) is widely regarded as the first computer programmer. > %USERPROFILE%\wikis\history-of-computing\raw_sources\ada-lovelace.txt
 ```
 
 **Linux / macOS:**
@@ -841,8 +834,8 @@ If the server is running in the background, stop it using the PID printed at sta
 # Linux / macOS
 kill $(cat ~/wikis/history-of-computing/.synthadoc/server.pid)
 
-# Windows (PowerShell)
-taskkill /PID (Get-Content "$env:USERPROFILE\wikis\history-of-computing\.synthadoc\server.pid") /F
+# Windows (cmd)
+for /f %p in (%USERPROFILE%\wikis\history-of-computing\.synthadoc\server.pid) do taskkill /PID %p /F
 ```
 
 Then uninstall:
@@ -882,17 +875,19 @@ audit trail are provider-agnostic — switching does not require re-ingesting an
 
 Get a key at **console.anthropic.com** — pay-per-token, no free tier.
 
-**Windows (cmd.exe):**
+**Windows (cmd — current session only):**
 
 ```cmd
 set ANTHROPIC_API_KEY=sk-ant-your-key-here
 ```
 
-**Windows (PowerShell, permanent):**
+**Windows (cmd — permanent, survives reboot):**
 
-```powershell
-[System.Environment]::SetEnvironmentVariable("ANTHROPIC_API_KEY", "sk-ant-your-key-here", "User")
+```cmd
+setx ANTHROPIC_API_KEY sk-ant-your-key-here
 ```
+
+> After `setx`, open a new cmd window for the variable to take effect.
 
 **Linux / macOS:**
 
