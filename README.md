@@ -243,7 +243,7 @@ setx TAVILY_API_KEY tvly-…
 synthadoc --version
 ```
 
-### Step 6 — Install a wiki, then start the engine
+### Step 6 — Install a demo wiki, then start the engine
 
 A wiki must be installed before the engine can serve it. The fastest way to get started is the **History of Computing** demo, which ships with 10 pre-built pages and sample source files — no LLM API key required to browse it.
 
