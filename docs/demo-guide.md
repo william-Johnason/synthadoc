@@ -133,6 +133,11 @@ Dataview is required for the live dashboard in `wiki/dashboard.md`.
 1. **Settings** (gear icon, bottom-left) → **Community plugins** → **Turn on community plugins**
 2. Click **Browse** → search `Dataview` → **Install** → **Enable**
 
+> **Dataview cache:** Dataview caches frontmatter and does not always refresh immediately
+> when Synthadoc modifies files externally. If the dashboard appears stale after an ingest
+> or lint run, drop the cache from the command palette:
+> `Ctrl/Cmd+P` → **Dataview: Drop all cached file metadata**.
+
 ---
 
 **Step 3 — Install the Synthadoc Obsidian plugin**
@@ -402,6 +407,11 @@ synthadoc jobs status <job-id> -w history-of-computing
 
 The LLM proposes a resolution, appends it as a `**Resolution:**` block, and sets
 `status: active`. Review the result in Obsidian and edit if needed.
+
+> **Dashboard still showing the contradiction?** Dataview may be serving stale cached
+> metadata. Drop the cache: `Ctrl/Cmd+P` → **Dataview: Drop all cached file metadata**.
+> If `synthadoc lint report -w history-of-computing` shows "all clear", the file on disk
+> is already correct — Dataview just hasn't caught up yet.
 
 ---
 
