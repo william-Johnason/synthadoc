@@ -21,6 +21,11 @@ class UrlSkill(BaseSkill):
     async def extract(self, source: str) -> ExtractedContent:
         async with httpx.AsyncClient(follow_redirects=True, timeout=30, headers=_HEADERS) as client:
             resp = await client.get(source)
+            if resp.status_code == 403:
+                raise PermissionError(
+                    f"URL blocked (403 Forbidden): {source} — "
+                    "site requires a browser or login. Try a different source."
+                )
             resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
         for tag in soup(["script", "style", "nav", "footer"]):
