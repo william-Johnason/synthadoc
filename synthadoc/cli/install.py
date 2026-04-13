@@ -11,6 +11,7 @@ from typing import Optional
 import typer
 
 from synthadoc.cli.main import app
+from synthadoc.cli._port import find_free_port as _find_free_port, _DEFAULT_PORT
 from synthadoc import errors as E
 
 _REGISTRY = Path.home() / ".synthadoc" / "wikis.json"
@@ -53,6 +54,7 @@ def install_cmd(
     target: str = typer.Option(..., "--target", "-t", help="Parent directory to install into"),
     demo: bool = typer.Option(False, "--demo", "-d", help="Install from a demo template matching <name>"),
     domain: str = typer.Option("General", "--domain", help="Knowledge domain (fresh wikis only)"),
+    port: Optional[int] = typer.Option(None, "--port", help="Server port (default: auto-detect from 7070)"),
 ):
     """Create a new wiki, optionally from a demo template.
 
@@ -84,6 +86,20 @@ def install_cmd(
                 f"Then run install again.",
             )
 
+    # ── Port resolution ────────────────────────────────────────────────────────
+    if port is not None:
+        effective_port = port
+    else:
+        effective_port = _find_free_port(_DEFAULT_PORT)
+        if effective_port != _DEFAULT_PORT:
+            confirmed = typer.confirm(
+                f"Port {_DEFAULT_PORT} is already in use. "
+                f"Install '{name}' on port {effective_port} instead?"
+            )
+            if not confirmed:
+                typer.echo("Tip: use --port <N> to specify a port manually.", err=True)
+                raise typer.Exit(1)
+
     if demo:
         if name not in _DEMOS:
             E.cli_error(
@@ -97,7 +113,7 @@ def install_cmd(
         (dest / ".synthadoc" / "logs").mkdir(parents=True, exist_ok=True)
     else:
         from synthadoc.cli._init import init_wiki
-        init_wiki(dest, domain)
+        init_wiki(dest, domain, port=effective_port)
 
     registry = _read_registry()
     registry[name] = {
@@ -108,7 +124,9 @@ def install_cmd(
     _write_registry(registry)
 
     typer.echo(f"Wiki '{name}' installed at {dest}")
-    typer.echo(f"Open {dest}/ as an Obsidian vault — pages are in {dest}/wiki/")
+    typer.echo(f"  Port   {effective_port}")
+    typer.echo(f"  Pages  {dest}/wiki/")
+    typer.echo(f"Start:   synthadoc serve -w {name}")
 
 
 @app.command("uninstall")
