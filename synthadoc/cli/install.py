@@ -32,6 +32,37 @@ def _write_registry(data: dict) -> None:
     _REGISTRY.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
 
+def _run_scaffold(dest: Path, domain: str):
+    """Try to run ScaffoldAgent. Returns ScaffoldResult or None if no API key is set."""
+    import asyncio
+    import os
+    from synthadoc.config import load_config
+    from synthadoc.providers import make_provider
+
+    cfg = load_config(project_config=dest / ".synthadoc" / "config.toml")
+    provider_name = cfg.agents.resolve("ingest").provider
+
+    _KEY_ENV = {
+        "anthropic": "ANTHROPIC_API_KEY",
+        "openai": "OPENAI_API_KEY",
+        "gemini": "GEMINI_API_KEY",
+        "groq": "GROQ_API_KEY",
+    }
+    env_var = _KEY_ENV.get(provider_name)
+    if env_var and not os.environ.get(env_var, "").strip():
+        return None  # no key — caller will fall back to static template
+
+    try:
+        provider = make_provider("ingest", cfg)
+        from synthadoc.agents.scaffold_agent import ScaffoldAgent
+        agent = ScaffoldAgent(provider=provider)
+        return asyncio.run(agent.scaffold(domain=domain))
+    except Exception as exc:
+        import logging
+        logging.getLogger(__name__).warning("Scaffold LLM call failed: %s", exc)
+        return None
+
+
 def resolve_wiki_path(wiki: str) -> Path:
     """Resolve a --wiki value to an absolute Path.
 
@@ -114,6 +145,31 @@ def install_cmd(
     else:
         from synthadoc.cli._init import init_wiki
         init_wiki(dest, domain, port=effective_port)
+
+        # ── LLM scaffold ──────────────────────────────────────────────────────
+        typer.echo("Generating domain-specific scaffold...")
+        scaffold_result = _run_scaffold(dest, domain)
+        if scaffold_result:
+            (dest / "wiki" / "index.md").write_text(
+                scaffold_result.index_md, encoding="utf-8", newline="\n")
+            (dest / "AGENTS.md").write_text(
+                scaffold_result.agents_md, encoding="utf-8", newline="\n")
+            (dest / "wiki" / "purpose.md").write_text(
+                scaffold_result.purpose_md, encoding="utf-8", newline="\n")
+            dashboard_path = dest / "wiki" / "dashboard.md"
+            dash = dashboard_path.read_text(encoding="utf-8")
+            dash = dash.replace(
+                f"# {domain} — Dashboard",
+                f"# {domain} — Dashboard\n\n{scaffold_result.dashboard_intro}",
+                1,
+            )
+            dashboard_path.write_text(dash, encoding="utf-8", newline="\n")
+            typer.echo("  Scaffold complete.")
+        else:
+            typer.echo(
+                f"  Tip: Run synthadoc scaffold -w {name} after setting your LLM API key"
+                " to generate a domain-specific scaffold"
+            )
 
     registry = _read_registry()
     registry[name] = {
