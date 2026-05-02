@@ -812,37 +812,36 @@ All commands are accessible via the Command Palette (`Ctrl/Cmd+P` → type `Synt
 ### Ingest
 
 
-| Command                                    | What it does                                                                                                                                                                                                                       |
-| ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Synthadoc: Ingest: current file`          | Ingests the active note. If no file is open, shows a file picker scoped to`raw_sources/`.                                                                                                                                          |
-| `Synthadoc: Ingest: all sources in folder` | Scans the`raw_sources` folder and queues every supported file for ingestion.                                                                                                                                                       |
-| `Synthadoc: Ingest: from URL...`           | Modal — paste any URL and queue it for fetch and ingestion.                                                                                                                                                                       |
-| `Synthadoc: Ingest: web search...`         | Live-polling modal — type a topic, set max results (1–50, default 20) and poll interval (500–10000 ms, default 2000 ms). Shows phase text, live pages list, and URL errors as fan-out jobs complete.`Ctrl/Cmd+Enter` to submit. |
+| Command                                    | What it does                                                                                                                                                                                                                              |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Synthadoc: Ingest: current file`          | Ingests the active note with live progress polling. If no file is open, shows a file picker scoped to `raw_sources/`.                                                                                                                     |
+| `Synthadoc: Ingest: all sources in folder` | Scans the `raw_sources` folder and queues every supported file for ingestion.                                                                                                                                                             |
+| `Synthadoc: Ingest: from URL...`           | Modal — paste any URL and queue it for fetch and ingestion. Polls job status live and shows progress until the job settles.                                                                                                               |
+| `Synthadoc: Ingest: web search...`         | Live-polling modal — type a topic, set max results (1–50, default 20) and poll interval (500–10000 ms, default 2000 ms). Shows phase text, live pages list, and URL errors as fan-out jobs complete. `Ctrl/Cmd+Enter` to submit. |
 
 ### Query
 
 
 | Command                             | What it does                                                                                                                                                                                                                                 |
 | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Synthadoc: Query: ask the wiki...` | Responsive modal — ask a natural-language question, get a markdown answer with clickable`[[wikilinks]]` to source pages. `Ctrl/Cmd+Enter` to submit. If a knowledge gap is detected, shows a callout with suggested `search for:` commands. |
+| `Synthadoc: Query: ask the wiki...` | Responsive modal — ask a natural-language question, get a markdown answer with clickable `[[wikilinks]]` to source pages. `Ctrl/Cmd+Enter` to submit. If a knowledge gap is detected, shows a callout with suggested `search for:` commands. |
 
 ### Lint
 
 
-| Command                                  | What it does                                                                                 |
-| ---------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `Synthadoc: Lint: run`                   | Runs lint in the background; notification shows contradiction + orphan counts when complete. |
-| `Synthadoc: Lint: run with auto-resolve` | Same as above but resolves contradictions ≥ 85% confidence automatically.                   |
-| `Synthadoc: Lint: report`                | Full lint report — contradicted pages and orphans with suggested index entries.             |
+| Command                   | What it does                                                                                                                                              |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Synthadoc: Lint: run...` | Modal with **Auto-resolve** checkbox. Runs a full lint pass; polls progress live and reports contradiction + orphan counts when complete. Tick the checkbox to automatically resolve contradictions at ≥ 85% confidence. |
+| `Synthadoc: Lint: report` | Full lint report — contradicted pages and orphans with suggested index entries.                                                                           |
 
 ### Jobs
 
 
-| Command                                        | What it does                                                                                    |
-| ---------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `Synthadoc: Jobs: list...`                     | Job table with status-filter dropdown (pending, in_progress, completed, failed, skipped, dead). |
-| `Synthadoc: Jobs: retry dead job...`           | Lists all dead jobs with a**Retry** button per job.                                             |
-| `Synthadoc: Jobs: purge old completed/dead...` | Removes completed and dead jobs older than N days (default: 7).                                 |
+| Command                                           | What it does                                                                                             |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `Synthadoc: Jobs: list...`                        | Job table with status-filter dropdown (pending, in_progress, completed, failed, skipped, dead).          |
+| `Synthadoc: Jobs: retry failed or dead jobs...`   | Multi-select table of all failed and dead jobs; all checkboxes pre-ticked. Polls progress live until all selected jobs settle. |
+| `Synthadoc: Jobs: purge old completed/dead...`    | Removes completed and dead jobs older than N days (default: 7).                                          |
 
 > **Tip — cancelling a bad batch:** `synthadoc jobs cancel -w <wiki> --yes` marks every
 > pending job as `skipped` immediately. Follow up with `synthadoc jobs purge` to remove
@@ -851,18 +850,21 @@ All commands are accessible via the Command Palette (`Ctrl/Cmd+P` → type `Synt
 ### Wiki
 
 
-| Command                                   | What it does                                                                                            |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `Synthadoc: Wiki: regenerate scaffold...` | Rewrites`index.md`, `AGENTS.md`, and `purpose.md` using the LLM. All existing wiki pages are preserved. |
+| Command                                   | What it does                                                                                                                          |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `Synthadoc: Wiki: regenerate scaffold...` | Rewrites `index.md`, `AGENTS.md`, and `purpose.md` using the LLM. Polls job status live. All existing wiki pages are preserved. |
 
 ### Audit
 
 
-| Command                               | What it does                                                                              |
-| ------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `Synthadoc: Audit: ingest history...` | Table of recent ingest records — source, pages created/updated, tokens, cost, timestamp. |
-| `Synthadoc: Audit: cost summary...`   | Token totals + USD cost with daily breakdown for the last N days.                         |
-| `Synthadoc: Audit: query history...`  | Recent questions, sub-question counts, token usage, cost per query.                       |
+| Command                               | What it does                                                                                       |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `Synthadoc: Audit: ingest history...` | Table of recent ingest records — source, pages created/updated, tokens, cost, timestamp.          |
+| `Synthadoc: Audit: cost summary...`   | Token totals + USD cost with daily breakdown for the last N days.                                  |
+| `Synthadoc: Audit: query history...`  | Recent questions, sub-question counts, token usage, cost per query.                                |
+| `Synthadoc: Audit: events...`         | Table of system events — contradictions found, auto-resolutions, cost gate triggers. Customisable limit (default 100, max 1000). |
+
+> **UX note:** All modals are draggable and support full text selection and copy-paste.
 
 ### Ribbon icon
 

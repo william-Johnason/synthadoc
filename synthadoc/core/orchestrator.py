@@ -123,7 +123,6 @@ class Orchestrator:
     async def _run_ingest(self, job_id: str, source: str, auto_confirm: bool,
                           force: bool = False, max_results: int | None = None) -> None:
         # auto_confirm is reserved for when user-facing confirmation prompts are added.
-        # Cost tracking is live in v0.2 but cost_guard.check() is not yet enforced here.
         from synthadoc.agents.ingest_agent import IngestAgent
         from synthadoc.skills.web_search.scripts.main import _INTENT_RE as _WEB_SEARCH_RE
         try:
