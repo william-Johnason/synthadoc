@@ -10,12 +10,12 @@ sources: []
 
 ## Recommended first ingests
 
-**Federal Register (public)**
+**Cornell LII Code of Federal Regulations — all 50 titles (free)**
 ```
-synthadoc ingest "https://www.federalregister.gov/agencies/" -w <wiki>
+synthadoc ingest "https://www.law.cornell.edu/cfr/text" -w <wiki>
 ```
 
-**Cornell LII (US Code, free)**
+**Cornell LII US Code — all 54 titles (free)**
 ```
 synthadoc ingest "https://www.law.cornell.edu/uscode/text" -w <wiki>
 ```

@@ -10,9 +10,9 @@ sources: []
 
 ## Recommended first ingests
 
-**Federal Register regulatory updates (public)**
+**Cornell LII Code of Federal Regulations — all 50 titles (free)**
 ```
-synthadoc ingest "https://www.federalregister.gov/agencies/<agency-slug>" -w <wiki>
+synthadoc ingest "https://www.law.cornell.edu/cfr/text" -w <wiki>
 ```
 
 **NIST Risk Management Framework overview (free)**

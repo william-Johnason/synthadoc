@@ -10,9 +10,9 @@ sources: []
 
 ## Recommended first ingests
 
-**USPTO Patent Center — download portfolio as CSV or PDF (public)**
+**USPTO patents — search and prosecution resources (public)**
 ```
-synthadoc ingest "https://patentcenter.uspto.gov/" -w <wiki>
+synthadoc ingest "https://www.uspto.gov/patents" -w <wiki>
 ```
 
 **WIPO PatentScope — international patent search (free)**

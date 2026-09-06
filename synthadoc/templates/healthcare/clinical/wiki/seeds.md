@@ -17,7 +17,7 @@ synthadoc ingest "https://www.cdc.gov/mmwr/index.html" -w <wiki>
 
 **USPSTF preventive care recommendations (free)**
 ```
-synthadoc ingest "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation-topics" -w <wiki>
+synthadoc ingest "https://www.uspreventiveservicestaskforce.org/uspstf/" -w <wiki>
 ```
 
 ## Recommended web searches

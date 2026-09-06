@@ -10,12 +10,12 @@ sources: []
 
 ## Recommended first ingests
 
-**NAR commercial real estate research (public)**
+**Wikipedia: Real estate investing — cap rates, NOI, IRR, DSCR concepts**
 ```
-synthadoc ingest "https://www.nar.realtor/research-and-statistics/commercial-real-estate-statistics" -w <wiki>
+synthadoc ingest "https://en.wikipedia.org/wiki/Real_estate_investing" -w <wiki>
 ```
 
-**FRED residential rental vacancy rate (Federal Reserve)**
+**FRED residential rental vacancy rate (Federal Reserve economic data)**
 ```
 synthadoc ingest "https://fred.stlouisfed.org/series/RRVRUSQ156N" -w <wiki>
 ```

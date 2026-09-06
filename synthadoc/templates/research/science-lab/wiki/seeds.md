@@ -17,7 +17,7 @@ synthadoc ingest "https://pubmed.ncbi.nlm.nih.gov/?term=<PI+last+name>+<institut
 
 **PubMed Central — free full-text protocol and methods papers**
 ```
-synthadoc ingest "https://www.ncbi.nlm.nih.gov/pmc/" -w <wiki>
+synthadoc ingest "https://pmc.ncbi.nlm.nih.gov/" -w <wiki>
 ```
 
 ## Recommended web searches

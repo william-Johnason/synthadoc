@@ -10,14 +10,14 @@ sources: []
 
 ## Recommended first ingests
 
-**CFPB mortgage resources (public)**
+**CFPB mortgage compliance resources (public)**
 ```
 synthadoc ingest "https://www.consumerfinance.gov/compliance/compliance-resources/mortgage-resources/" -w <wiki>
 ```
 
-**FHFA conforming loan limits**
+**FHFA House Price Index — measures repeat-sale home price changes (public)**
 ```
-synthadoc ingest "https://www.fhfa.gov/DataTools/Downloads/Documents/Conforming-Loan-Limits/FullCountyLoanLimitList2025.csv" -w <wiki>
+synthadoc ingest "https://www.fhfa.gov/data/hpi" -w <wiki>
 ```
 
 ## Recommended web searches

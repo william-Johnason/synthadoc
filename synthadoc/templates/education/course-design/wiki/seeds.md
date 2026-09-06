@@ -10,9 +10,9 @@ sources: []
 
 ## Recommended first ingests
 
-**Bloom's Taxonomy reference — Vanderbilt CFT (free)**
+**Wikipedia: Bloom's Taxonomy — learning objectives and cognitive levels**
 ```
-synthadoc ingest "https://cft.vanderbilt.edu/guides-sub-pages/blooms-taxonomy/" -w <wiki>
+synthadoc ingest "https://en.wikipedia.org/wiki/Bloom%27s_taxonomy" -w <wiki>
 ```
 
 **Wikipedia: ADDIE instructional design model**

@@ -10,14 +10,14 @@ sources: []
 
 ## Recommended first ingests
 
-**DOE commercial buildings resources (public)**
+**Energy Star commercial buildings program (public)**
 ```
-synthadoc ingest "https://www.energy.gov/eere/buildings/commercial-buildings" -w <wiki>
+synthadoc ingest "https://www.energystar.gov/buildings" -w <wiki>
 ```
 
-**OSHA General Industry standards index (public)**
+**Wikipedia: Occupational safety and health — regulations and standards overview**
 ```
-synthadoc ingest "https://www.osha.gov/laws-regs/regulations/standardnumber/1910" -w <wiki>
+synthadoc ingest "https://en.wikipedia.org/wiki/Occupational_safety_and_health" -w <wiki>
 ```
 
 ## Recommended web searches

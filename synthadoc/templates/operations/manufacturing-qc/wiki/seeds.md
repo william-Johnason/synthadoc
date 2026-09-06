@@ -15,9 +15,9 @@ sources: []
 synthadoc ingest "https://www.nist.gov/manufacturing" -w <wiki>
 ```
 
-**ASQ quality tools reference (free)**
+**Wikipedia: Quality control — methods, tools, and frameworks**
 ```
-synthadoc ingest "https://asq.org/quality-resources/quality-tools" -w <wiki>
+synthadoc ingest "https://en.wikipedia.org/wiki/Quality_control" -w <wiki>
 ```
 
 ## Recommended web searches

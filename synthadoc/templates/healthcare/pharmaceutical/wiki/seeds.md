@@ -10,9 +10,9 @@ sources: []
 
 ## Recommended first ingests
 
-**FDA drug development process overview (public)**
+**FDA drug development and approval process (public)**
 ```
-synthadoc ingest "https://www.fda.gov/patients/drug-development-process" -w <wiki>
+synthadoc ingest "https://www.fda.gov/drugs/development-approval-process-drugs" -w <wiki>
 ```
 
 **PubMed clinical trials for your indication (free)**

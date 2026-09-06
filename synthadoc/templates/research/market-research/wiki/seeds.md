@@ -15,9 +15,9 @@ sources: []
 synthadoc ingest "https://www.census.gov/economic-indicators/" -w <wiki>
 ```
 
-**US Census Bureau NAICS industry codes (public)**
+**BLS industry at a glance — all NAICS sectors (public)**
 ```
-synthadoc ingest "https://www.census.gov/naics/" -w <wiki>
+synthadoc ingest "https://www.bls.gov/iag/tgs/iag_index_alpha.htm" -w <wiki>
 ```
 
 ## Recommended web searches
