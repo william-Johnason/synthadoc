@@ -10,14 +10,14 @@ sources: []
 
 ## Recommended first ingests
 
-**Census Housing Vacancy Survey — rental and homeowner vacancy rates (public)**
+**EDGAR REIT filings — recent 10-K annual reports from real estate investment trusts (public)**
 ```
-synthadoc ingest "https://www.census.gov/housing/hvs/index.html" -w <wiki>
+synthadoc ingest "https://efts.sec.gov/LATEST/search-index?q=%22real+estate+investment+trust%22&forms=10-K&dateRange=custom&startdt=2024-01-01&enddt=2025-01-01" -w <wiki>
 ```
 
-**FHFA House Price Index — tracks repeat-sale price changes by metro and state (public)**
+**Federal Reserve Z.1 — financial accounts of the US, including real estate debt and REIT sector (public)**
 ```
-synthadoc ingest "https://www.fhfa.gov/data/hpi" -w <wiki>
+synthadoc ingest "https://www.federalreserve.gov/releases/z1/" -w <wiki>
 ```
 
 ## Recommended web searches
