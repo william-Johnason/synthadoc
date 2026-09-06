@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import re
-import shutil
 from pathlib import Path
 
 _TEMPLATES_ROOT = Path(__file__).parent.parent / "templates"
@@ -71,7 +70,7 @@ def get_template_guidelines(template_ref: str) -> str:
     return p.read_text(encoding="utf-8")
 
 
-def apply_template(wiki_root: Path, template_ref: str) -> None:
+def apply_template(wiki_root: Path, template_ref: str, wiki_name: str = "") -> None:
     """Apply a domain template delta onto a freshly init_wiki()'d directory.
 
     Steps (in order):
@@ -81,20 +80,32 @@ def apply_template(wiki_root: Path, template_ref: str) -> None:
     4. Copy wiki/index.md  → wiki_root/wiki/index.md    (overwrites init_wiki version)
     5. Copy remaining wiki/*.md stubs → wiki_root/wiki/ (additive; never overwrites existing)
 
+    When ``wiki_name`` is provided every occurrence of the literal token ``<wiki>``
+    in copied files is replaced with the actual wiki name.  This is how seeds.md
+    ingest commands (e.g. ``synthadoc ingest "…" -w <wiki>``) become ready to run
+    immediately without manual find-and-replace.
+
     Does NOT write AGENTS/CLAUDE/GEMINI.md — caller (install.py) handles those.
     Does NOT patch staging config — caller handles that too.
     """
     template_path = get_template_path(template_ref)
     wiki_dir = wiki_root / "wiki"
 
+    def _write(src: Path, dest: Path) -> None:
+        """Copy src → dest, substituting <wiki> when wiki_name is set."""
+        text = src.read_text(encoding="utf-8")
+        if wiki_name:
+            text = text.replace("<wiki>", wiki_name)
+        dest.write_text(text, encoding="utf-8", newline="\n")
+
     # 1. ROUTING.md
-    shutil.copy2(template_path / "routing.md", wiki_root / "ROUTING.md")
+    _write(template_path / "routing.md", wiki_root / "ROUTING.md")
 
     # 2-3. purpose.md and index.md — always overwrite
     for name in ("purpose.md", "index.md"):
         src = template_path / "wiki" / name
         if src.exists():
-            shutil.copy2(src, wiki_dir / name)
+            _write(src, wiki_dir / name)
 
     # 4. Remaining stubs — additive, do not overwrite existing user pages
     for src in sorted((template_path / "wiki").glob("*.md")):
@@ -102,4 +113,4 @@ def apply_template(wiki_root: Path, template_ref: str) -> None:
             continue
         dest = wiki_dir / src.name
         if not dest.exists():
-            shutil.copy2(src, dest)
+            _write(src, dest)

@@ -195,7 +195,7 @@ def install_cmd(
             (dest / fname).write_text(tmpl.format(**skill_kw), encoding="utf-8", newline="\n")
 
         try:
-            apply_template(dest, template)
+            apply_template(dest, template, wiki_name=name)
         except ValueError as exc:
             E.cli_error(E.WIKI_INVALID, str(exc), 'Run "synthadoc templates list" for available templates.')
         except FileNotFoundError as exc:

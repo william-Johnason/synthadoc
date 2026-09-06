@@ -91,6 +91,19 @@ def test_install_unknown_template_errors(tmp_path, mock_init_wiki):
     assert result.exit_code != 0
 
 
+def test_install_template_passes_wiki_name_to_apply_template(tmp_path, mock_init_wiki):
+    """install passes the wiki name as wiki_name= so <wiki> is substituted in seeds."""
+    with patch("synthadoc.cli.install.init_wiki", side_effect=mock_init_wiki), \
+         patch("synthadoc.cli.install.apply_template") as mock_apply, \
+         patch("synthadoc.cli.install.get_template_guidelines", return_value="- a\n- b\n- c\n- d\n- e\n"), \
+         patch("synthadoc.cli.install._assign_wiki_port", return_value=7070), \
+         patch("synthadoc.cli.install.Scheduler"), \
+         patch("synthadoc.cli.install._install_plugin_into", return_value=False):
+        runner.invoke(app, ["install", "my-portfolio", "--target", str(tmp_path), "--template", "finance/investment"])
+    _, kwargs = mock_apply.call_args
+    assert kwargs.get("wiki_name") == "my-portfolio"
+
+
 def test_install_template_demo_path_unaffected(tmp_path, mock_init_wiki):
     """--demo path must not be broken by the template changes."""
     with patch("synthadoc.cli.install.init_wiki", side_effect=mock_init_wiki), \

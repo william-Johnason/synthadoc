@@ -192,6 +192,42 @@ def test_apply_template_does_not_overwrite_user_pages(fake_templates, blank_wiki
     assert user_page.read_text(encoding="utf-8") == "# My Custom Page\n\nUser content.\n"
 
 
+def test_apply_template_substitutes_wiki_name(fake_templates, blank_wiki):
+    """<wiki> tokens in copied files are replaced with the actual wiki name."""
+    import synthadoc.core.template_engine as te
+
+    # Inject a <wiki> token into the fake seeds.md before applying
+    seeds_src = te._TEMPLATES_ROOT / "finance" / "investment" / "wiki" / "seeds.md"
+    seeds_src.write_text(
+        seeds_src.read_text(encoding="utf-8")
+        + '\nsynthadoc ingest "https://example.com/report" -w <wiki>\n',
+        encoding="utf-8",
+    )
+
+    apply_template(blank_wiki, "finance/investment", wiki_name="my-portfolio")
+
+    written = (blank_wiki / "wiki" / "seeds.md").read_text(encoding="utf-8")
+    assert "-w my-portfolio" in written
+    assert "<wiki>" not in written
+
+
+def test_apply_template_no_wiki_name_leaves_placeholder(fake_templates, blank_wiki):
+    """Without wiki_name the <wiki> token is preserved verbatim."""
+    import synthadoc.core.template_engine as te
+
+    seeds_src = te._TEMPLATES_ROOT / "finance" / "investment" / "wiki" / "seeds.md"
+    seeds_src.write_text(
+        seeds_src.read_text(encoding="utf-8")
+        + '\nsynthadoc ingest "https://example.com/report" -w <wiki>\n',
+        encoding="utf-8",
+    )
+
+    apply_template(blank_wiki, "finance/investment")  # no wiki_name
+
+    written = (blank_wiki / "wiki" / "seeds.md").read_text(encoding="utf-8")
+    assert "<wiki>" in written
+
+
 def test_apply_template_does_not_import_cli(fake_templates, blank_wiki):
     """Verify no cli module is imported by template_engine (no core→cli dependency)."""
     import sys
