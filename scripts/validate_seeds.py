@@ -76,21 +76,22 @@ def extract_seed_urls(seeds_text: str) -> list[str]:
 # The ingest agent uses action="skip" for out-of-scope content; this prompt
 # reduces that to a binary yes/no so we can report it without writing pages.
 _SCOPE_PROMPT = """\
-You are checking whether a web page is in scope for a knowledge wiki.
+You maintain a knowledge wiki. Decide whether a new source document is in scope.
 
 Wiki scope (from purpose.md):
 {purpose}
 
-Web page content (first 3 000 characters):
+action="skip" means the source is completely OUTSIDE the wiki's domain \
+(e.g. spam, medical receipts, unrelated e-commerce, raw API metadata with \
+no substantive prose content).
+action="skip" must NEVER be used because a topic is already covered by an \
+existing page.
+A source whose extracted text is just machine-generated metadata (JSON field \
+names, accession numbers, index entries) with no readable prose about the \
+domain should be action="skip".
+
+Source text (first 3 000 characters):
 {content}
-
-Decide: does this content fall squarely within the wiki's stated domain?
-
-Guidelines:
-- in_scope=true  → content is DIRECTLY useful to a practitioner in this domain.
-- in_scope=false → content is primarily about excluded topics, or so generic
-  that it adds no domain-specific value (e.g. a general housing overview in a
-  commercial real-estate investment wiki).
 
 Return ONLY valid JSON (no markdown fences, no explanation outside the JSON):
 {{"in_scope": true_or_false, "reasoning": "one concise sentence"}}"""
@@ -114,18 +115,23 @@ def _extract_json_from_text(text: str) -> dict:
 
 class _Backend:
     """Represents one LLM backend: either a direct async Anthropic client or a
-    local CLI tool (opencode / claude)."""
+    local CLI tool (opencode / claude).
+
+    CLI invocation by tool:
+      opencode  →  opencode run "<prompt>"
+      claude    →  claude -p "<prompt>"
+    """
 
     def __init__(
         self,
         label: str,
         client=None,          # anthropic.AsyncAnthropic | None
-        cli_binary: str = "",  # path/name of CLI binary, "" when using client
+        cli_cmd: list = None,  # base command list; prompt appended as last arg
         model: str = "",
     ) -> None:
         self.label = label
         self._client = client
-        self._cli_binary = cli_binary
+        self._cli_cmd: list = cli_cmd or []
         self._model = model
 
     async def complete(self, prompt: str) -> str:
@@ -138,10 +144,11 @@ class _Backend:
             )
             return (resp.content[0].text if resp.content else "").strip()
 
-        # CLI path — pass prompt as the -p argument so the tool runs
-        # non-interactively and prints its response to stdout.
+        # CLI path — prompt appended as final positional argument:
+        #   opencode run "<prompt>"   or   claude -p "<prompt>"
+        cmd = [*self._cli_cmd, prompt]
         proc = await asyncio.create_subprocess_exec(
-            self._cli_binary, "-p", prompt,
+            *cmd,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
@@ -152,10 +159,10 @@ class _Backend:
                 proc.kill()
             except Exception:
                 pass
-            raise RuntimeError(f"{self._cli_binary} timed out after 90 s")
+            raise RuntimeError(f"{self._cli_cmd[0]} timed out after 90 s")
         if proc.returncode not in (0, None):
             raise RuntimeError(
-                f"{self._cli_binary} exited {proc.returncode}"
+                f"{self._cli_cmd[0]} exited {proc.returncode}"
             )
         return stdout.decode(errors="replace").strip()
 
@@ -165,8 +172,8 @@ def _detect_backend(model: str) -> "_Backend | None":
 
     Priority:
       1. ANTHROPIC_API_KEY env var  → direct async Anthropic client (fastest)
-      2. opencode binary in PATH    → subprocess, no key needed
-      3. claude binary in PATH      → subprocess, no key needed (Claude Code)
+      2. opencode in PATH           → opencode run "<prompt>"
+      3. claude in PATH             → claude -p "<prompt>"  (Claude Code)
     """
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
     if api_key:
@@ -180,10 +187,13 @@ def _detect_backend(model: str) -> "_Backend | None":
         except ImportError:
             pass  # fall through to CLI detection
 
-    for binary in ("opencode", "claude"):
-        path = shutil.which(binary)
-        if path:
-            return _Backend(label=binary, cli_binary=path)
+    # CLI candidates: (binary name, base command list)
+    for binary, cli_cmd in [
+        ("opencode", ["opencode", "run"]),   # opencode run "<prompt>"
+        ("claude",   ["claude", "-p"]),       # claude -p "<prompt>"
+    ]:
+        if shutil.which(binary):
+            return _Backend(label=binary, cli_cmd=cli_cmd)
 
     return None
 
@@ -352,9 +362,13 @@ async def async_main(args: argparse.Namespace) -> int:
         backend = _detect_backend(args.model)
         if backend is None:
             print(
-                "INFO: no LLM backend found — running URL-only mode.\n"
-                "      To enable scope checks, set ANTHROPIC_API_KEY, or install\n"
-                "      opencode / claude (Claude Code) in your PATH.",
+                "WARNING: SCOPE CHECK SKIPPED — no LLM backend available.\n"
+                "  Results below show URL accessibility only; out-of-scope seeds\n"
+                "  will NOT be detected.\n"
+                "  To enable scope checks (required before shipping), use one of:\n"
+                "    • set ANTHROPIC_API_KEY in your environment\n"
+                "    • install opencode  (opencode run is used)\n"
+                "    • install claude    (Claude Code, claude -p is used)",
                 file=sys.stderr,
             )
 

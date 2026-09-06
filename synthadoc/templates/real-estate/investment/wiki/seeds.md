@@ -10,9 +10,9 @@ sources: []
 
 ## Recommended first ingests
 
-**EDGAR REIT filings — recent 10-K annual reports from real estate investment trusts (public)**
+**Nareit — worldwide representative voice for REITs and listed real estate companies (public)**
 ```
-synthadoc ingest "https://efts.sec.gov/LATEST/search-index?q=%22real+estate+investment+trust%22&forms=10-K&dateRange=custom&startdt=2024-01-01&enddt=2025-01-01" -w <wiki>
+synthadoc ingest "https://www.reit.com/" -w <wiki>
 ```
 
 **Federal Reserve Z.1 — financial accounts of the US, including real estate debt and REIT sector (public)**
