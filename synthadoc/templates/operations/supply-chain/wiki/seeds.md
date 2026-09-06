@@ -10,9 +10,9 @@ sources: []
 
 ## Recommended first ingests
 
-**SBA market research guide — industry analysis and competitive landscape (public)**
+**ITA trade resources — international trade data, logistics, and market access (public)**
 ```
-synthadoc ingest "https://www.sba.gov/business-guide/plan-your-business/market-research-competitive-analysis" -w <wiki>
+synthadoc ingest "https://www.trade.gov/" -w <wiki>
 ```
 
 **USTR trade agreements — US free trade agreement texts and summaries (public)**

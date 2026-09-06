@@ -15,9 +15,9 @@ sources: []
 synthadoc ingest "https://www.census.gov/housing/hvs/index.html" -w <wiki>
 ```
 
-**Census Bureau housing data — housing stock, permits, and occupancy (public)**
+**FHFA House Price Index — tracks repeat-sale price changes by metro and state (public)**
 ```
-synthadoc ingest "https://www.census.gov/topics/housing.html" -w <wiki>
+synthadoc ingest "https://www.fhfa.gov/data/hpi" -w <wiki>
 ```
 
 ## Recommended web searches
