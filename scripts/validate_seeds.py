@@ -27,6 +27,7 @@ import asyncio
 import json
 import os
 import re
+import shutil
 import sys
 from pathlib import Path
 
@@ -94,32 +95,116 @@ Guidelines:
 Return ONLY valid JSON (no markdown fences, no explanation outside the JSON):
 {{"in_scope": true_or_false, "reasoning": "one concise sentence"}}"""
 
+# ANSI escape sequence pattern used to strip CLI colour output
+_ANSI_RE = re.compile(r"\x1b\[[0-9;]*[mGKHF]")
+
+
+def _extract_json_from_text(text: str) -> dict:
+    """Extract the last JSON object ``{...}`` from potentially decorated CLI output."""
+    clean = _ANSI_RE.sub("", text)
+    clean = re.sub(r"^```[a-z]*\s*|\s*```$", "", clean, flags=re.MULTILINE)
+    # Find the last {...} block (handles preamble text some CLIs emit)
+    matches = list(re.finditer(r"\{[^{}]+\}", clean, re.DOTALL))
+    if not matches:
+        raise ValueError(f"no JSON object in output: {clean[:200]!r}")
+    return json.loads(matches[-1].group())
+
+
+# ── LLM backend detection ─────────────────────────────────────────────────────
+
+class _Backend:
+    """Represents one LLM backend: either a direct async Anthropic client or a
+    local CLI tool (opencode / claude)."""
+
+    def __init__(
+        self,
+        label: str,
+        client=None,          # anthropic.AsyncAnthropic | None
+        cli_binary: str = "",  # path/name of CLI binary, "" when using client
+        model: str = "",
+    ) -> None:
+        self.label = label
+        self._client = client
+        self._cli_binary = cli_binary
+        self._model = model
+
+    async def complete(self, prompt: str) -> str:
+        """Run the prompt and return raw text output."""
+        if self._client is not None:
+            resp = await self._client.messages.create(
+                model=self._model,
+                max_tokens=200,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            return (resp.content[0].text if resp.content else "").strip()
+
+        # CLI path — pass prompt as the -p argument so the tool runs
+        # non-interactively and prints its response to stdout.
+        proc = await asyncio.create_subprocess_exec(
+            self._cli_binary, "-p", prompt,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        try:
+            stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=90)
+        except asyncio.TimeoutError:
+            try:
+                proc.kill()
+            except Exception:
+                pass
+            raise RuntimeError(f"{self._cli_binary} timed out after 90 s")
+        if proc.returncode not in (0, None):
+            raise RuntimeError(
+                f"{self._cli_binary} exited {proc.returncode}"
+            )
+        return stdout.decode(errors="replace").strip()
+
+
+def _detect_backend(model: str) -> "_Backend | None":
+    """Return the first usable LLM backend, or None if none is available.
+
+    Priority:
+      1. ANTHROPIC_API_KEY env var  → direct async Anthropic client (fastest)
+      2. opencode binary in PATH    → subprocess, no key needed
+      3. claude binary in PATH      → subprocess, no key needed (Claude Code)
+    """
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    if api_key:
+        try:
+            import anthropic
+            return _Backend(
+                label="anthropic-sdk",
+                client=anthropic.AsyncAnthropic(api_key=api_key),
+                model=model,
+            )
+        except ImportError:
+            pass  # fall through to CLI detection
+
+    for binary in ("opencode", "claude"):
+        path = shutil.which(binary)
+        if path:
+            return _Backend(label=binary, cli_binary=path)
+
+    return None
+
 
 async def check_scope(
     purpose: str,
     content: str,
-    client: "anthropic.AsyncAnthropic",
-    model: str,
+    backend: "_Backend",
 ) -> tuple[bool, str]:
     """Return ``(in_scope, reasoning)`` from an LLM scope check."""
     prompt = _SCOPE_PROMPT.format(
         purpose=purpose.strip()[:4_000],
         content=content[:3_000],
     )
-    resp = await client.messages.create(
-        model=model,
-        max_tokens=200,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    raw = (resp.content[0].text if resp.content else "").strip()
-    # Strip markdown fences in case the model ignores the instruction
-    raw = re.sub(r"^```[a-z]*\s*|\s*```$", "", raw, flags=re.MULTILINE).strip()
+    raw = await backend.complete(prompt)
     try:
-        data = json.loads(raw)
+        data = _extract_json_from_text(raw)
         return bool(data.get("in_scope", True)), str(data.get("reasoning", ""))
-    except json.JSONDecodeError:
+    except (json.JSONDecodeError, ValueError):
         # Treat parse failure as pass so we do not create false negatives
-        return True, f"(JSON parse error — treating as pass; raw={raw[:80]})"
+        return True, f"(JSON parse error — treating as pass; raw={raw[:80]!r})"
 
 
 # ── Per-URL validation ────────────────────────────────────────────────────────
@@ -129,9 +214,7 @@ async def validate_url(
     purpose: str,
     *,
     skill: "UrlSkill",
-    check_scope_flag: bool,
-    client,
-    model: str,
+    backend: "_Backend | None",
     url_sem: asyncio.Semaphore,
     llm_sem: asyncio.Semaphore,
 ) -> dict:
@@ -161,10 +244,13 @@ async def validate_url(
             result["url_status"] = "ERROR"
             result["error_detail"] = str(e)[:120]
 
-    # ── Step 2: scope check (only when fetch succeeded) ──────────────────────
-    if check_scope_flag and purpose and result["url_status"] == "OK":
+    # ── Step 2: scope check (only when fetch succeeded and backend available) ─
+    if backend is not None and purpose and result["url_status"] == "OK":
         async with llm_sem:
-            in_scope, reasoning = await check_scope(purpose, content, client, model)
+            try:
+                in_scope, reasoning = await check_scope(purpose, content, backend)
+            except Exception as e:
+                in_scope, reasoning = True, f"(scope check error: {e!s:.100})"
         result["in_scope"] = in_scope
         result["scope_reason"] = reasoning
 
@@ -176,10 +262,8 @@ async def validate_url(
 async def validate_template(
     template_dir: Path,
     *,
-    check_scope_flag: bool,
     skill,
-    client,
-    model: str,
+    backend: "_Backend | None",
     url_sem: asyncio.Semaphore,
     llm_sem: asyncio.Semaphore,
 ) -> list[dict]:
@@ -201,9 +285,7 @@ async def validate_template(
         validate_url(
             url, purpose,
             skill=skill,
-            check_scope_flag=check_scope_flag,
-            client=client,
-            model=model,
+            backend=backend,
             url_sem=url_sem,
             llm_sem=llm_sem,
         )
@@ -214,7 +296,7 @@ async def validate_template(
 
 # ── Report ─────────────────────────────────────────────────────────────────────
 
-def print_report(results: list[dict], check_scope_flag: bool) -> list[dict]:
+def print_report(results: list[dict], scope_active: bool) -> list[dict]:
     """Print a colour-coded table and return the list of failed rows."""
     GREEN = "\033[32m"
     RED   = "\033[31m"
@@ -224,7 +306,7 @@ def print_report(results: list[dict], check_scope_flag: bool) -> list[dict]:
     COL_S = 18   # url_status
 
     hdr = f"{'TEMPLATE':<{COL_T}}  {'URL_STATUS':<{COL_S}}"
-    if check_scope_flag:
+    if scope_active:
         hdr += f"  {'SCOPE':<6}"
     hdr += "  URL"
     print(f"\n{hdr}")
@@ -240,19 +322,19 @@ def print_report(results: list[dict], check_scope_flag: bool) -> list[dict]:
 
         color = GREEN if passed else RED
         scope_str = ""
-        if check_scope_flag and r["in_scope"] is not None:
+        if scope_active and r["in_scope"] is not None:
             scope_str = "YES" if r["in_scope"] else "NO "
         short_url = r["url"][:56] + "…" if len(r["url"]) > 57 else r["url"]
 
         row = f"{color}{r['template']:<{COL_T}}  {r['url_status']:<{COL_S}}"
-        if check_scope_flag:
+        if scope_active:
             row += f"  {scope_str:<6}"
         row += f"  {short_url}{RESET}"
         print(row)
 
         if not url_ok and r["error_detail"]:
             print(f"  {'':>{COL_T}}  {r['error_detail']}")
-        if check_scope_flag and not scope_ok:
+        if scope_active and not scope_ok:
             print(f"  {'':>{COL_T}}  ↳ {r['scope_reason']}")
 
     return failures
@@ -264,31 +346,19 @@ async def async_main(args: argparse.Namespace) -> int:
     _ensure_path()
     from synthadoc.skills.url.scripts.main import UrlSkill
 
-    check_scope_flag = not args.no_scope
-
-    # Anthropic client for scope checks
-    client = None
-    if check_scope_flag:
-        api_key = os.environ.get("ANTHROPIC_API_KEY", "")
-        if not api_key:
+    # ── LLM backend resolution ────────────────────────────────────────────────
+    backend: "_Backend | None" = None
+    if not args.no_scope:
+        backend = _detect_backend(args.model)
+        if backend is None:
             print(
-                "WARNING: ANTHROPIC_API_KEY not set — running URL-only mode.\n"
-                "         Set the key or pass --no-scope to silence this warning.",
+                "INFO: no LLM backend found — running URL-only mode.\n"
+                "      To enable scope checks, set ANTHROPIC_API_KEY, or install\n"
+                "      opencode / claude (Claude Code) in your PATH.",
                 file=sys.stderr,
             )
-            check_scope_flag = False
-        else:
-            try:
-                import anthropic
-                client = anthropic.AsyncAnthropic(api_key=api_key)
-            except ImportError:
-                print(
-                    "WARNING: anthropic package not installed — running URL-only mode.",
-                    file=sys.stderr,
-                )
-                check_scope_flag = False
 
-    # Template directories to scan
+    # ── Template directories ──────────────────────────────────────────────────
     if args.template:
         dirs = [TEMPLATES_DIR / args.template]
         if not dirs[0].exists():
@@ -304,19 +374,18 @@ async def async_main(args: argparse.Namespace) -> int:
     url_sem = asyncio.Semaphore(5)   # max 5 concurrent URL fetches
     llm_sem = asyncio.Semaphore(2)   # max 2 concurrent LLM scope checks
 
-    print(f"Scanning {len(dirs)} template(s) …", end="", flush=True)
-    if check_scope_flag:
-        print(f"  (scope check: {args.model})")
-    else:
-        print("  (--no-scope: URL check only)")
+    scope_label = (
+        f"scope via {backend.label}"
+        if backend is not None
+        else "--no-scope: URL check only"
+    )
+    print(f"Scanning {len(dirs)} template(s) …  ({scope_label})")
 
     batches = await asyncio.gather(*[
         validate_template(
             d,
-            check_scope_flag=check_scope_flag,
             skill=skill,
-            client=client,
-            model=args.model,
+            backend=backend,
             url_sem=url_sem,
             llm_sem=llm_sem,
         )
@@ -329,7 +398,7 @@ async def async_main(args: argparse.Namespace) -> int:
         print("No concrete seed URLs found.")
         return 0
 
-    failures = print_report(all_results, check_scope_flag)
+    failures = print_report(all_results, scope_active=backend is not None)
 
     total = len(all_results)
     print(f"\n{'='*60}")
