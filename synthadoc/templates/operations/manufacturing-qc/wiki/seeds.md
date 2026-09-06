@@ -15,9 +15,9 @@ sources: []
 synthadoc ingest "https://www.nist.gov/manufacturing" -w <wiki>
 ```
 
-**Wikipedia: Quality control — methods, tools, and frameworks**
+**NIST metrology — measurement science and calibration standards (public)**
 ```
-synthadoc ingest "https://en.wikipedia.org/wiki/Quality_control" -w <wiki>
+synthadoc ingest "https://www.nist.gov/metrology" -w <wiki>
 ```
 
 ## Recommended web searches

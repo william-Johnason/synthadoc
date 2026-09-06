@@ -10,14 +10,14 @@ sources: []
 
 ## Recommended first ingests
 
-**BLS Manufacturing industry data (public)**
+**SBA market research guide — industry analysis and competitive landscape (public)**
 ```
-synthadoc ingest "https://www.bls.gov/iag/tgs/iag31-33.htm" -w <wiki>
+synthadoc ingest "https://www.sba.gov/business-guide/plan-your-business/market-research-competitive-analysis" -w <wiki>
 ```
 
-**US CBP import requirements overview (public)**
+**USTR trade agreements — US free trade agreement texts and summaries (public)**
 ```
-synthadoc ingest "https://www.cbp.gov/trade/basic-import-export" -w <wiki>
+synthadoc ingest "https://ustr.gov/trade-agreements" -w <wiki>
 ```
 
 ## Recommended web searches

@@ -15,9 +15,9 @@ sources: []
 synthadoc ingest "https://www.census.gov/economic-indicators/" -w <wiki>
 ```
 
-**BLS industry at a glance — all NAICS sectors (public)**
+**SBA market research guide — industry analysis and competitive landscape (public)**
 ```
-synthadoc ingest "https://www.bls.gov/iag/tgs/iag_index_alpha.htm" -w <wiki>
+synthadoc ingest "https://www.sba.gov/business-guide/plan-your-business/market-research-competitive-analysis" -w <wiki>
 ```
 
 ## Recommended web searches

@@ -10,14 +10,14 @@ sources: []
 
 ## Recommended first ingests
 
-**Wikipedia: Bloom's Taxonomy — learning objectives and cognitive levels**
+**Institute of Education Sciences — federally funded education research and evidence (public)**
 ```
-synthadoc ingest "https://en.wikipedia.org/wiki/Bloom%27s_taxonomy" -w <wiki>
+synthadoc ingest "https://ies.ed.gov/" -w <wiki>
 ```
 
-**Wikipedia: ADDIE instructional design model**
+**IES regional education labs — research-to-practice resources for educators (public)**
 ```
-synthadoc ingest "https://en.wikipedia.org/wiki/ADDIE_Model" -w <wiki>
+synthadoc ingest "https://ies.ed.gov/ncee/edlabs/" -w <wiki>
 ```
 
 ## Recommended web searches

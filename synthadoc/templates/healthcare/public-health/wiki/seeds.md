@@ -10,9 +10,9 @@ sources: []
 
 ## Recommended first ingests
 
-**CDC FastStats — leading causes and prevalence data (public)**
+**AHRQ data resources — healthcare quality and outcomes data (public)**
 ```
-synthadoc ingest "https://www.cdc.gov/nchs/fastats/leading-causes-of-death.htm" -w <wiki>
+synthadoc ingest "https://www.ahrq.gov/data/index.html" -w <wiki>
 ```
 
 **WHO Global Health Observatory (public)**

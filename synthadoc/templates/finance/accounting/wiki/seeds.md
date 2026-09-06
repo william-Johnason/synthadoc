@@ -10,9 +10,9 @@ sources: []
 
 ## Recommended first ingests
 
-**IRS Publication 535 Business Expenses (free)**
+**IRS publications index — all tax guidance and instructions (free)**
 ```
-synthadoc ingest "https://www.irs.gov/pub/irs-pdf/p535.pdf" -w <wiki>
+synthadoc ingest "https://www.irs.gov/publications" -w <wiki>
 ```
 
 **PCAOB auditing standards (free)**

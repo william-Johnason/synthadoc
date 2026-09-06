@@ -12,14 +12,14 @@ sources: []
 
 Seed the wiki with real market context before adding proprietary research.
 
-**SEC EDGAR company filings index (public filings, HTML)**
+**SEC EDGAR full-text search — recent 10-K annual filings (public)**
 ```
-synthadoc ingest "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=<ticker>&type=10-K&dateb=&owner=include&count=10" -w <wiki>
+synthadoc ingest "https://efts.sec.gov/LATEST/search-index?q=%22annual+report%22&forms=10-K&dateRange=custom&startdt=2024-01-01&enddt=2025-01-01" -w <wiki>
 ```
 
-**Federal Reserve economic data (FRED — 10-year treasury rate)**
+**Federal Reserve H.15 — selected interest rates (treasury, corporate, prime)**
 ```
-synthadoc ingest "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS10" -w <wiki>
+synthadoc ingest "https://www.federalreserve.gov/releases/h15/" -w <wiki>
 ```
 
 ## Recommended web searches

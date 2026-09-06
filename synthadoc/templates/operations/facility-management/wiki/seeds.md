@@ -15,9 +15,9 @@ sources: []
 synthadoc ingest "https://www.energystar.gov/buildings" -w <wiki>
 ```
 
-**Wikipedia: Occupational safety and health — regulations and standards overview**
+**OSHA workers — hazard recognition, worker rights, and safety standards (public)**
 ```
-synthadoc ingest "https://en.wikipedia.org/wiki/Occupational_safety_and_health" -w <wiki>
+synthadoc ingest "https://www.osha.gov/workers" -w <wiki>
 ```
 
 ## Recommended web searches

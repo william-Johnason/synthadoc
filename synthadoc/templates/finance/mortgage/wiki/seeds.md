@@ -10,9 +10,9 @@ sources: []
 
 ## Recommended first ingests
 
-**CFPB mortgage compliance resources (public)**
+**VA home loan types — fixed-rate, ARM, cash-out refi, and jumbo (public)**
 ```
-synthadoc ingest "https://www.consumerfinance.gov/compliance/compliance-resources/mortgage-resources/" -w <wiki>
+synthadoc ingest "https://www.va.gov/housing-assistance/home-loans/loan-types/" -w <wiki>
 ```
 
 **FHFA House Price Index — measures repeat-sale home price changes (public)**

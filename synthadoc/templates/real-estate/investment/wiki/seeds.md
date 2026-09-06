@@ -10,14 +10,14 @@ sources: []
 
 ## Recommended first ingests
 
-**Wikipedia: Real estate investing — cap rates, NOI, IRR, DSCR concepts**
+**Census Housing Vacancy Survey — rental and homeowner vacancy rates (public)**
 ```
-synthadoc ingest "https://en.wikipedia.org/wiki/Real_estate_investing" -w <wiki>
+synthadoc ingest "https://www.census.gov/housing/hvs/index.html" -w <wiki>
 ```
 
-**FRED residential rental vacancy rate (Federal Reserve economic data)**
+**Census Bureau housing data — housing stock, permits, and occupancy (public)**
 ```
-synthadoc ingest "https://fred.stlouisfed.org/series/RRVRUSQ156N" -w <wiki>
+synthadoc ingest "https://www.census.gov/topics/housing.html" -w <wiki>
 ```
 
 ## Recommended web searches

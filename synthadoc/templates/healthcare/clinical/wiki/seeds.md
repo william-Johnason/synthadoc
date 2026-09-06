@@ -10,9 +10,9 @@ sources: []
 
 ## Recommended first ingests
 
-**CDC MMWR (Morbidity and Mortality Weekly Report — free)**
+**AHRQ clinical resources — evidence-based guidance for clinicians (public)**
 ```
-synthadoc ingest "https://www.cdc.gov/mmwr/index.html" -w <wiki>
+synthadoc ingest "https://www.ahrq.gov/professionals/clinicians-providers/index.html" -w <wiki>
 ```
 
 **USPSTF preventive care recommendations (free)**

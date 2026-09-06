@@ -15,9 +15,9 @@ sources: []
 synthadoc ingest "https://www.fdic.gov/regulations/laws/rules/" -w <wiki>
 ```
 
-**CFPB compliance resources**
+**OCC publications — comptroller's handbook and regulatory guidance (public)**
 ```
-synthadoc ingest "https://www.consumerfinance.gov/compliance/compliance-resources/" -w <wiki>
+synthadoc ingest "https://www.occ.gov/publications-and-resources/publications/index-publications.html" -w <wiki>
 ```
 
 ## Recommended web searches
