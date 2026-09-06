@@ -1,4 +1,4 @@
----
+﻿---
 title: Getting Started — Public Health
 status: draft
 confidence: low
@@ -24,7 +24,7 @@ synthadoc ingest "https://www.who.int/data/gho" -w <wiki>
 
 - `CDC community health assessment MAPP methodology toolkit` — assessment framework
 - `WHO Global Burden of Disease study 2019 results` — global disease burden
-- `"<condition>" incidence prevalence United States 2023 CDC` — US surveillance
+- `"<condition>" incidence prevalence United States latest CDC` — US surveillance
 - `Community Preventive Services Task Force recommendations` — evidence-based interventions
 - `health equity social determinants framework Healthy People 2030` — equity frameworks
 

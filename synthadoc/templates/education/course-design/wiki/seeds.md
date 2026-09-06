@@ -1,4 +1,4 @@
----
+﻿---
 title: Getting Started — Course Design
 status: draft
 confidence: low
@@ -22,7 +22,7 @@ synthadoc ingest "https://ies.ed.gov/ncee/edlabs/" -w <wiki>
 
 ## Recommended web searches
 
-- `Bloom's Taxonomy action verbs learning objectives 2024` — objective writing
+- `Bloom's Taxonomy action verbs learning objectives latest` — objective writing
 - `ADDIE instructional design model curriculum development` — design framework
 - `backward design curriculum mapping Wiggins McTighe UbD` — curriculum design
 - `online course accessibility WCAG 2.1 captioning requirements` — accessibility

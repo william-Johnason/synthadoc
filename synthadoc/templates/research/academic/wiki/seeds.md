@@ -1,4 +1,4 @@
----
+﻿---
 title: Getting Started — Academic Research
 status: draft
 confidence: low
@@ -22,10 +22,10 @@ synthadoc ingest "https://www.semanticscholar.org/search?q=<topic>&sort=Relevanc
 
 ## Recommended web searches
 
-- `"<research topic>" survey review 2023 2024 arxiv` — recent survey papers
+- `"<research topic>" survey review latest arxiv` — recent survey papers
 - `"<your field>" seminal papers citation classics` — foundational works
 - `PubMed "<topic>" systematic review meta-analysis` — medical research
-- `Google Scholar "<topic>" cited by >100 2020` — high-impact recent work
+- `Google Scholar "<topic>" cited by >100 latest` — high-impact recent work
 - `"<research question>" replication study reproducibility` — replication status
 
 ## First steps checklist

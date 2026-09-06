@@ -1,4 +1,4 @@
----
+﻿---
 title: Getting Started — Clinical
 status: draft
 confidence: low
@@ -22,7 +22,7 @@ synthadoc ingest "https://www.uspreventiveservicestaskforce.org/uspstf/" -w <wik
 
 ## Recommended web searches
 
-- `"<condition name>" clinical practice guidelines 2024 AHA ACC ACP` — specialty guidelines
+- `"<condition name>" clinical practice guidelines latest AHA ACC ACP` — specialty guidelines
 - `PubMed "systematic review" "<condition>" treatment efficacy` — evidence base
 - `"<medication name>" FDA prescribing information label` — official drug label
 - `NIH clinical guidelines HIV diabetes hypertension` — NIH guideline library

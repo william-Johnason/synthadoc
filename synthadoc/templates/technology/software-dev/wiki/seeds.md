@@ -1,4 +1,4 @@
----
+﻿---
 title: Getting Started — Software Development
 status: draft
 confidence: low
@@ -29,7 +29,7 @@ synthadoc ingest ~/.claude/projects/<project-hash>/<session>.jsonl -w <wiki>
 
 - `architecture decision record template ADR Nygard format` — ADR best practices
 - `SRE runbook template Google site reliability` — operational runbooks
-- `"<your framework>" architecture best practices 2024` — framework-specific
+- `"<your framework>" architecture best practices latest` — framework-specific
 - `REST API documentation standards OpenAPI Swagger` — API docs
 - `technical debt register prioritization SQALE` — debt management
 

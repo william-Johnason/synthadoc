@@ -1,4 +1,4 @@
----
+﻿---
 title: Getting Started — Mortgage
 status: draft
 confidence: low
@@ -22,11 +22,11 @@ synthadoc ingest "https://www.fhfa.gov/data/hpi" -w <wiki>
 
 ## Recommended web searches
 
-- `Fannie Mae conforming loan limits 2025 county list` — current limits
+- `Fannie Mae conforming loan limits latest county list` — current limits
 - `CFPB TRID disclosure requirements lenders guide` — regulatory compliance
 - `FHA handbook 4000.1 underwriting guidelines` — government loan policy
-- `mortgage underwriting DTI ratio guidelines 2024` — debt-to-income standards
-- `non-QM loan products lender guidelines 2024` — non-agency products
+- `mortgage underwriting DTI ratio guidelines latest` — debt-to-income standards
+- `non-QM loan products lender guidelines latest` — non-agency products
 
 ## First steps checklist
 

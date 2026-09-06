@@ -1,4 +1,4 @@
----
+﻿---
 title: Getting Started — Pharmaceutical
 status: draft
 confidence: low
@@ -22,10 +22,10 @@ synthadoc ingest "https://pubmed.ncbi.nlm.nih.gov/?term=<indication>&filter=pubt
 
 ## Recommended web searches
 
-- `FDA guidance NDA BLA submission requirements 2024` — regulatory guidance
+- `FDA guidance NDA BLA submission requirements latest` — regulatory guidance
 - `ICH E6 GCP guidelines clinical trial conduct` — GCP standards
 - `FDA PDUFA drug approval timeline process` — approval process
-- `EMA CHMP clinical trial guidelines 2024` — European requirements
+- `EMA CHMP clinical trial guidelines latest` — European requirements
 - `"<mechanism of action>" preclinical efficacy models review` — translational science
 
 ## First steps checklist

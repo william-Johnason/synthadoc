@@ -1,4 +1,4 @@
----
+﻿---
 title: Getting Started — Compliance
 status: draft
 confidence: low
@@ -22,11 +22,11 @@ synthadoc ingest "https://csrc.nist.gov/Projects/risk-management/about-rmf" -w <
 
 ## Recommended web searches
 
-- `"<regulation name>" compliance requirements checklist 2024` — compliance obligations
+- `"<regulation name>" compliance requirements checklist latest` — compliance obligations
 - `COSO 2013 integrated framework internal control summary` — control framework
 - `NIST cybersecurity framework compliance mapping SP 800-53` — cybersecurity compliance
 - `SOC 2 Type II trust services criteria AICPA` — SOC 2 requirements
-- `GDPR CCPA data privacy compliance checklist 2024` — privacy compliance
+- `GDPR CCPA data privacy compliance checklist latest` — privacy compliance
 
 ## First steps checklist
 

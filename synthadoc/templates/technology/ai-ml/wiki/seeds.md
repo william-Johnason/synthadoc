@@ -1,4 +1,4 @@
----
+﻿---
 title: Getting Started — AI/ML
 status: draft
 confidence: low
@@ -22,7 +22,7 @@ synthadoc ingest "https://huggingface.co/<org>/<model>" -w <wiki>
 
 ## Recommended web searches
 
-- `"<task name>" state of the art benchmark 2024 arxiv` — SOTA for your task
+- `"<task name>" state of the art benchmark latest arxiv` — SOTA for your task
 - `MLflow experiment tracking getting started tutorial` — experiment management
 - `model card template responsible AI documentation Google` — model documentation
 - `"<model architecture>" training recipe best practices` — training tips

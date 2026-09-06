@@ -1,4 +1,4 @@
----
+﻿---
 title: Getting Started — Investment Research
 status: draft
 confidence: low
@@ -25,8 +25,8 @@ synthadoc ingest "https://www.federalreserve.gov/releases/h15/" -w <wiki>
 ## Recommended web searches
 
 - `"<company name>" 10-K annual report site:sec.gov` — primary filing
-- `"<company name>" earnings call transcript Q4 2024` — management commentary
-- `"<sector>" industry outlook 2025 report filetype:pdf` — sector context
+- `"<company name>" earnings call transcript Q4 latest` — management commentary
+- `"<sector>" industry outlook latest report filetype:pdf` — sector context
 - `"<company name>" analyst initiation coverage price target` — sell-side consensus
 - `LBO model tutorial investment banking valuation` — modeling reference
 

@@ -1,4 +1,4 @@
----
+﻿---
 title: Getting Started — Real Estate Investment
 status: draft
 confidence: low
@@ -22,11 +22,11 @@ synthadoc ingest "https://www.crefc.org/" -w <wiki>
 
 ## Recommended web searches
 
-- `commercial real estate cap rate by asset class 2024` — market cap rates
+- `commercial real estate cap rate by asset class latest` — market cap rates
 - `NOI calculation net operating income real estate formula` — underwriting fundamentals
-- `apartment market vacancy rent growth 2024` — multifamily market data
+- `apartment market vacancy rent growth latest` — multifamily market data
 - `DCF real estate model IRR equity multiple tutorial` — financial modeling
-- `REIT sector analysis office industrial retail 2024` — sector trends
+- `REIT sector analysis office industrial retail latest` — sector trends
 
 ## First steps checklist
 

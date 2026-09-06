@@ -1,4 +1,4 @@
----
+﻿---
 title: Getting Started — Banking
 status: draft
 confidence: low
@@ -22,10 +22,10 @@ synthadoc ingest "https://www.occ.gov/publications-and-resources/publications/in
 
 ## Recommended web searches
 
-- `FDIC bank examination manual 2024` — safety and soundness
+- `FDIC bank examination manual latest` — safety and soundness
 - `FinCEN BSA AML compliance program requirements` — anti-money laundering
 - `Federal Reserve Regulation E electronic fund transfers` — debit card compliance
-- `CFPB supervisory highlights 2024` — recent enforcement priorities
+- `CFPB supervisory highlights latest` — recent enforcement priorities
 - `OCC community bank supervision handbook` — exam guidance
 
 ## First steps checklist

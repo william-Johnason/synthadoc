@@ -1,4 +1,4 @@
----
+﻿---
 title: Getting Started — Science Lab
 status: draft
 confidence: low
@@ -26,7 +26,7 @@ synthadoc ingest "https://pmc.ncbi.nlm.nih.gov/" -w <wiki>
 - `"<instrument model>" user manual calibration procedure` — instrument protocols
 - `"<assay name>" troubleshooting guide common problems` — troubleshooting
 - `lab notebook best practices research data management` — documentation standards
-- `"<research topic>" methods section published paper 2024` — methodology examples
+- `"<research topic>" methods section published paper latest` — methodology examples
 
 ## First steps checklist
 

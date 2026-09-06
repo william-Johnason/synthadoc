@@ -1,4 +1,4 @@
----
+﻿---
 title: Getting Started — Legal Operations
 status: draft
 confidence: low
@@ -23,10 +23,10 @@ synthadoc ingest "https://www.law.cornell.edu/uscode/text" -w <wiki>
 ## Recommended web searches
 
 - `"<statute citation>" regulatory text law.cornell.edu` — primary law text
-- `"<agency>" enforcement actions 2024 press releases` — enforcement trends
+- `"<agency>" enforcement actions latest press releases` — enforcement trends
 - `contract management best practices CLOC legal operations` — legal ops standards
 - `litigation hold policy template corporate legal department` — hold procedures
-- `outside counsel guidelines sample ACC 2024` — billing and management guidelines
+- `outside counsel guidelines sample ACC latest` — billing and management guidelines
 
 ## First steps checklist
 

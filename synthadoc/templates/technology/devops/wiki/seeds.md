@@ -1,4 +1,4 @@
----
+﻿---
 title: Getting Started — DevOps
 status: draft
 confidence: low
@@ -30,7 +30,7 @@ synthadoc ingest docs/post-mortems/ --batch -w <wiki>
 - `Google SRE book SLI SLO error budget free` — SRE foundations
 - `Terraform module documentation best practices` — IaC docs
 - `blameless post-mortem template incident review` — post-mortem format
-- `DORA metrics deployment frequency lead time 2024` — DevOps benchmarks
+- `DORA metrics deployment frequency lead time latest` — DevOps benchmarks
 - `Prometheus alerting rules best practices recording rules` — monitoring
 
 ## First steps checklist

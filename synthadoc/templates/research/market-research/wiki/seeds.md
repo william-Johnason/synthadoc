@@ -1,4 +1,4 @@
----
+﻿---
 title: Getting Started — Market Research
 status: draft
 confidence: low
@@ -22,11 +22,11 @@ synthadoc ingest "https://www.sba.gov/business-guide/plan-your-business/market-r
 
 ## Recommended web searches
 
-- `"<market name>" market size TAM 2024 report` — market sizing
+- `"<market name>" market size TAM latest report` — market sizing
 - `"<industry>" industry analysis Porter five forces` — competitive framework
-- `"<competitor name>" annual report investor day 2024` — competitor intelligence
-- `consumer survey "<product category>" satisfaction NPS 2024` — consumer data
-- `"<industry>" market share leaders 2024 IDC Gartner Forrester` — analyst reports
+- `"<competitor name>" annual report investor day latest` — competitor intelligence
+- `consumer survey "<product category>" satisfaction NPS latest` — consumer data
+- `"<industry>" market share leaders latest IDC Gartner Forrester` — analyst reports
 
 ## First steps checklist
 

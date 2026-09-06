@@ -1,4 +1,4 @@
----
+﻿---
 title: Getting Started — Property Management
 status: draft
 confidence: low
@@ -23,7 +23,7 @@ synthadoc ingest "https://www.law.cornell.edu/wex/landlord-tenant_law" -w <wiki>
 ## Recommended web searches
 
 - `lease abstract template commercial real estate` — lease abstraction
-- `landlord tenant law "<your state>" notice requirements 2024` — local compliance
+- `landlord tenant law "<your state>" notice requirements latest` — local compliance
 - `property maintenance work order process best practices` — maintenance workflow
 - `vendor qualification property management contractor insurance` — vendor management
 - `residential rent roll template property management` — financial reporting
