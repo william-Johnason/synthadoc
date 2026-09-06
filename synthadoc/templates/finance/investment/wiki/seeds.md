@@ -12,9 +12,9 @@ sources: []
 
 Seed the wiki with real market context before adding proprietary research.
 
-**SEC EDGAR full-text search — recent 10-K annual filings (public)**
+**Investor.gov — SEC's investor education site covering stocks, bonds, funds, and accounts (public)**
 ```
-synthadoc ingest "https://efts.sec.gov/LATEST/search-index?q=%22annual+report%22&forms=10-K&dateRange=custom&startdt=2024-01-01&enddt=2025-01-01" -w <wiki>
+synthadoc ingest "https://www.investor.gov/introduction-investing" -w <wiki>
 ```
 
 **Federal Reserve H.15 — selected interest rates (treasury, corporate, prime)**
