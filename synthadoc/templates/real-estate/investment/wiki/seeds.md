@@ -15,9 +15,9 @@ sources: []
 synthadoc ingest "https://www.reit.com/" -w <wiki>
 ```
 
-**Federal Reserve Z.1 — financial accounts of the US, including real estate debt and REIT sector (public)**
+**CRE Finance Council — commercial real estate lending, CMBS, and debt financing standards (public)**
 ```
-synthadoc ingest "https://www.federalreserve.gov/releases/z1/" -w <wiki>
+synthadoc ingest "https://www.crefc.org/" -w <wiki>
 ```
 
 ## Recommended web searches

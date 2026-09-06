@@ -82,19 +82,21 @@ Wiki scope (from purpose.md):
 {purpose}
 
 action="skip" means the source is completely OUTSIDE the wiki's domain \
-(e.g. spam, medical receipts, unrelated e-commerce, raw API metadata with \
-no substantive prose content).
+(e.g. spam, medical receipts, unrelated e-commerce).
 action="skip" must NEVER be used because a topic is already covered by an \
-existing page.
-A source whose extracted text is just machine-generated metadata (JSON field \
-names, accession numbers, index entries) with no readable prose about the \
-domain should be action="skip".
+existing page — that is what action="update" is for.
+A broad general resource (e.g. a macro-economic report covering all sectors \
+when the wiki is focused on one sub-domain, or raw JSON metadata with no \
+readable prose) should be action="skip" because it adds no domain-specific \
+value.
+A source that is clearly authored for practitioners in this specific domain \
+should be action="ingest".
 
-Source text (first 3 000 characters):
+Source text (first 4 000 characters):
 {content}
 
-Return ONLY valid JSON (no markdown fences, no explanation outside the JSON):
-{{"in_scope": true_or_false, "reasoning": "one concise sentence"}}"""
+Return ONLY valid JSON (no markdown fences):
+{{"action": "ingest or skip", "reasoning": "one concise sentence"}}"""
 
 # ANSI escape sequence pattern used to strip CLI colour output
 _ANSI_RE = re.compile(r"\x1b\[[0-9;]*[mGKHF]")
@@ -203,15 +205,21 @@ async def check_scope(
     content: str,
     backend: "_Backend",
 ) -> tuple[bool, str]:
-    """Return ``(in_scope, reasoning)`` from an LLM scope check."""
+    """Return ``(in_scope, reasoning)`` from an LLM scope check.
+
+    Uses action="skip"/"ingest" to mirror the ingest agent's decision prompt
+    framing, which is stricter than a binary yes/no about general relevance.
+    """
     prompt = _SCOPE_PROMPT.format(
         purpose=purpose.strip()[:4_000],
-        content=content[:3_000],
+        content=content[:4_000],
     )
     raw = await backend.complete(prompt)
     try:
         data = _extract_json_from_text(raw)
-        return bool(data.get("in_scope", True)), str(data.get("reasoning", ""))
+        action = str(data.get("action", "ingest")).strip().lower()
+        in_scope = action != "skip"
+        return in_scope, str(data.get("reasoning", ""))
     except (json.JSONDecodeError, ValueError):
         # Treat parse failure as pass so we do not create false negatives
         return True, f"(JSON parse error — treating as pass; raw={raw[:80]!r})"
