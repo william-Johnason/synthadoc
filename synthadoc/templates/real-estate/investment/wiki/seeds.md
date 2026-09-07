@@ -57,7 +57,12 @@ synthadoc ingest "https://www.northspyre.com/blog/dcf-model-real-estate" -w <wik
   (JLL, CBRE, Marcus &amp; Millichap), then run
   `synthadoc ingest "https://..." -w <wiki>`. See [[submarkets]] for what gets captured.
 
-- [ ] Build a financial model page for your first property
+- [ ] **Build a financial model page for your first property** — copy
+  `raw_sources/financial-models/blank-financial-model.md`, fill in your
+  acquisition assumptions and paste the year-by-year results from your
+  spreadsheet, then run
+  `synthadoc ingest raw_sources/financial-models/<your-model>.md -w <wiki>`.
+  See [[financial-models]] for what gets captured.
 
 - [ ] Document your target return metrics in [[portfolio]]
 
