@@ -79,11 +79,17 @@ def apply_template(wiki_root: Path, template_ref: str, wiki_name: str = "") -> N
     3. Copy wiki/purpose.md → wiki_root/wiki/purpose.md  (overwrites init_wiki version)
     4. Copy wiki/index.md  → wiki_root/wiki/index.md    (overwrites init_wiki version)
     5. Copy remaining wiki/*.md stubs → wiki_root/wiki/ (additive; never overwrites existing)
+    6. Copy raw_sources/ tree → wiki_root/raw_sources/  (additive; never overwrites existing)
+
+    ``raw_sources/`` is an optional directory in each template that holds blank
+    intake forms for the domain (e.g. ``raw_sources/properties/blank-property-intake.md``
+    for real-estate templates).  The subfolder name is domain-specific; the copy
+    preserves the full directory structure.  Users copy a blank form, fill in their
+    data, and run ``synthadoc ingest raw_sources/<folder>/<filename>.md -w <wiki>``.
 
     When ``wiki_name`` is provided every occurrence of the literal token ``<wiki>``
-    in copied files is replaced with the actual wiki name.  This is how seeds.md
-    ingest commands (e.g. ``synthadoc ingest "…" -w <wiki>``) become ready to run
-    immediately without manual find-and-replace.
+    in copied files is replaced with the actual wiki name so ingest commands are
+    ready to run immediately without manual find-and-replace.
 
     Does NOT write AGENTS/CLAUDE/GEMINI.md — caller (install.py) handles those.
     Does NOT patch staging config — caller handles that too.
@@ -107,10 +113,22 @@ def apply_template(wiki_root: Path, template_ref: str, wiki_name: str = "") -> N
         if src.exists():
             _write(src, wiki_dir / name)
 
-    # 4. Remaining stubs — additive, do not overwrite existing user pages
+    # 4. Remaining wiki stubs — additive, do not overwrite existing user pages
     for src in sorted((template_path / "wiki").glob("*.md")):
         if src.name in ("purpose.md", "index.md"):
             continue
         dest = wiki_dir / src.name
         if not dest.exists():
             _write(src, dest)
+
+    # 5. raw_sources/ — copy entire tree additively (never overwrites existing files)
+    raw_src_root = template_path / "raw_sources"
+    if raw_src_root.is_dir():
+        raw_dest_root = wiki_root / "raw_sources"
+        for src in sorted(raw_src_root.rglob("*")):
+            if not src.is_file():
+                continue
+            dest = raw_dest_root / src.relative_to(raw_src_root)
+            if not dest.exists():
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                _write(src, dest)

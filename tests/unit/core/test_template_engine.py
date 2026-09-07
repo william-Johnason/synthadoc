@@ -192,6 +192,53 @@ def test_apply_template_does_not_overwrite_user_pages(fake_templates, blank_wiki
     assert user_page.read_text(encoding="utf-8") == "# My Custom Page\n\nUser content.\n"
 
 
+def test_apply_template_copies_raw_sources_tree(fake_templates, blank_wiki):
+    """raw_sources/ in the template is copied into wiki_root/raw_sources/ additively."""
+    import synthadoc.core.template_engine as te
+
+    # Add a raw_sources tree to the fake template
+    raw_src = te._TEMPLATES_ROOT / "finance" / "investment" / "raw_sources" / "portfolios"
+    raw_src.mkdir(parents=True)
+    (raw_src / "blank-portfolio-intake.md").write_text(
+        "# Portfolio Intake\n\n- **Name:**\n- **Ingest:** -w <wiki>\n",
+        encoding="utf-8",
+    )
+
+    apply_template(blank_wiki, "finance/investment", wiki_name="my-wiki")
+
+    dest = blank_wiki / "raw_sources" / "portfolios" / "blank-portfolio-intake.md"
+    assert dest.exists(), "raw_sources file should be copied into the installed wiki"
+    content = dest.read_text(encoding="utf-8")
+    assert "-w my-wiki" in content, "<wiki> should be substituted in raw_sources files"
+    assert "<wiki>" not in content
+
+
+def test_apply_template_raw_sources_additive(fake_templates, blank_wiki):
+    """raw_sources files that already exist in the wiki are never overwritten."""
+    import synthadoc.core.template_engine as te
+
+    raw_src = te._TEMPLATES_ROOT / "finance" / "investment" / "raw_sources"
+    raw_src.mkdir(parents=True)
+    (raw_src / "existing.md").write_text("# Template version\n", encoding="utf-8")
+
+    # Pre-create the file in the destination
+    existing_dest = blank_wiki / "raw_sources" / "existing.md"
+    existing_dest.parent.mkdir(parents=True, exist_ok=True)
+    existing_dest.write_text("# User version\n", encoding="utf-8")
+
+    apply_template(blank_wiki, "finance/investment")
+
+    assert existing_dest.read_text(encoding="utf-8") == "# User version\n", \
+        "apply_template must not overwrite existing raw_sources files"
+
+
+def test_apply_template_no_raw_sources_is_fine(fake_templates, blank_wiki):
+    """Templates without a raw_sources/ directory work without error."""
+    # The fake templates don't have raw_sources/ — should complete cleanly
+    apply_template(blank_wiki, "technology/software-dev")
+    assert not (blank_wiki / "raw_sources").exists()
+
+
 def test_apply_template_substitutes_wiki_name(fake_templates, blank_wiki):
     """<wiki> tokens in copied files are replaced with the actual wiki name."""
     import synthadoc.core.template_engine as te
