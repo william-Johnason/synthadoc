@@ -27,6 +27,7 @@ synthadoc ingest "https://www.crefc.org/" -w <wiki>
 - `apartment market vacancy rent growth latest` — multifamily market data
 - `DCF real estate model IRR equity multiple tutorial` — financial modeling
 - `REIT sector analysis office industrial retail latest` — sector trends
+- `"<your city>" residential real estate market report latest` — local submarket conditions (replace &lt;your city&gt; with your actual city or neighbourhood)
 
 ## Curated reference websites
 
