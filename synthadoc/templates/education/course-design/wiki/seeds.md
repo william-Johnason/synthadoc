@@ -1,4 +1,4 @@
-﻿---
+---
 title: Getting Started — Course Design
 status: draft
 confidence: low

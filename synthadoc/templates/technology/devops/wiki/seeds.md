@@ -1,4 +1,4 @@
-﻿---
+---
 title: Getting Started — DevOps
 status: draft
 confidence: low

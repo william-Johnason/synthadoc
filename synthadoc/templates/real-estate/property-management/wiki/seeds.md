@@ -1,4 +1,4 @@
-﻿---
+---
 title: Getting Started — Property Management
 status: draft
 confidence: low

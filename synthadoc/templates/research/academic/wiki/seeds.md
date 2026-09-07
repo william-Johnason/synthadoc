@@ -1,4 +1,4 @@
-﻿---
+---
 title: Getting Started — Academic Research
 status: draft
 confidence: low

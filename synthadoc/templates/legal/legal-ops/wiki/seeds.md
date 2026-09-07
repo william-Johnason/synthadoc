@@ -1,4 +1,4 @@
-﻿---
+---
 title: Getting Started — Legal Operations
 status: draft
 confidence: low

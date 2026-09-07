@@ -1,4 +1,4 @@
-﻿---
+---
 title: Getting Started — Pharmaceutical
 status: draft
 confidence: low

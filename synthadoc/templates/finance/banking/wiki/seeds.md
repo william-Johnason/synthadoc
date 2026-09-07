@@ -1,4 +1,4 @@
-﻿---
+---
 title: Getting Started — Banking
 status: draft
 confidence: low

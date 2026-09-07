@@ -43,8 +43,23 @@ synthadoc ingest "https://bradyware.com/asc-842-implementation-compliance" -w <w
 
 ## First steps checklist
 
-- [ ] Ingest your accounting policy manual
-- [ ] Ingest the most recent audit management letter
-- [ ] Create an account page for each major balance sheet line
-- [ ] Ingest your chart of accounts and GL structure document
-- [ ] Run scaffold to build the index
+- [ ] **Ingest your accounting policy manual** — run
+  `synthadoc ingest raw_sources/accounting-policy-manual.pdf -w <wiki>` (or
+  the path to your exported Word/PDF). This seeds [[internal-controls]] and
+  [[financial-statements]] with your entity's actual policies.
+
+- [ ] **Ingest the most recent audit management letter** — run
+  `synthadoc ingest raw_sources/audit-management-letter.pdf -w <wiki>`.
+  Prior-year findings populate [[audit-readiness]] automatically.
+
+- [ ] **Record your first month-end close** — copy
+  `raw_sources/close/template-month-end-close.md`, fill in the checklist as the
+  close progresses, then run
+  `synthadoc ingest raw_sources/close/close-YYYY-MM.md -w <wiki>`.
+  See [[close-checklist]] for what gets captured.
+
+- [ ] **Ingest your chart of accounts and GL structure** — export from your ERP
+  (QuickBooks, NetSuite, SAP) as a CSV or PDF, then run
+  `synthadoc ingest raw_sources/chart-of-accounts.csv -w <wiki>`.
+
+- [ ] **Run scaffold to build the index** — `synthadoc scaffold -w <wiki>`

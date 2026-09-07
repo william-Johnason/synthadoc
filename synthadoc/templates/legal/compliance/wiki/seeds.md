@@ -1,4 +1,4 @@
-﻿---
+---
 title: Getting Started — Compliance
 status: draft
 confidence: low

@@ -1,4 +1,4 @@
-﻿---
+---
 title: Getting Started — Science Lab
 status: draft
 confidence: low

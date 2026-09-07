@@ -1,4 +1,4 @@
-﻿---
+---
 title: Getting Started — Mortgage
 status: draft
 confidence: low

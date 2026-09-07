@@ -1,4 +1,4 @@
-﻿---
+---
 title: Getting Started — Clinical
 status: draft
 confidence: low

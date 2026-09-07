@@ -1,4 +1,4 @@
-﻿---
+---
 title: Getting Started — Software Development
 status: draft
 confidence: low

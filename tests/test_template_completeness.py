@@ -99,7 +99,9 @@ class TestTemplateCompleteness:
         for stub in wiki_dir.glob("*.md"):
             if stub.name in reserved:
                 continue
-            text = stub.read_text(encoding="utf-8")
+            # utf-8-sig strips the UTF-8 BOM (\xef\xbb\xbf) if present so
+            # startswith("---") works even on BOM-prefixed files.
+            text = stub.read_text(encoding="utf-8-sig")
             if not text.startswith("---"):
                 bad.append(f"{stub.name}: no frontmatter")
                 continue

@@ -1,4 +1,4 @@
-﻿---
+---
 title: Getting Started — Investment Research
 status: draft
 confidence: low
@@ -42,8 +42,23 @@ synthadoc ingest "https://breakingintowallstreet.com/kb/leveraged-buyouts-and-lb
 
 ## First steps checklist
 
-- [ ] Ingest the 10-K for your first portfolio company
-- [ ] Promote the generated page from candidates: `synthadoc candidates list -w <wiki>`
-- [ ] Create a stub deal page for each active position
-- [ ] Ingest a sector report to populate [[sectors]]
-- [ ] Run `synthadoc scaffold -w <wiki>` to update the index
+- [ ] **Ingest the 10-K for your first portfolio company** — find the filing on
+  [SEC EDGAR](https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&type=10-K),
+  then run `synthadoc ingest "https://..." -w <wiki>`. See [[companies]] for what
+  gets captured.
+
+- [ ] **Promote the generated company page from candidates** — after ingesting the
+  10-K, review and promote: `synthadoc candidates list -w <wiki>`, then
+  `synthadoc candidates promote <slug> -w <wiki>`.
+
+- [ ] **Open a deal memo for each active position** — copy
+  `raw_sources/deals/template-deal-memo.md`, fill in the deal terms and thesis,
+  then run `synthadoc ingest raw_sources/deals/<deal>.md -w <wiki>`.
+  See [[deals]] for what gets captured.
+
+- [ ] **Ingest a sector report to populate [[sectors]]** — use broker research
+  (Goldman, Morgan Stanley, JPMorgan), [IBISWorld](https://www.ibisworld.com/),
+  or [PitchBook](https://pitchbook.com/), then run
+  `synthadoc ingest "https://..." -w <wiki>`.
+
+- [ ] **Run scaffold to build the index** — `synthadoc scaffold -w <wiki>`
