@@ -8,54 +8,21 @@ sources: []
 
 # Portfolio
 
-Portfolio-level goals, target return metrics, and summary of all assets under management. Edit this page directly to record your investment strategy — it becomes the benchmark against which individual property performance is measured.
+Portfolio-level investment strategy and target return metrics. Populate by ingesting a completed portfolio goals form from `raw_sources/portfolio/`.
 
-## Investment Strategy
+The portfolio page captures:
 
-- **Strategy type:** (core / value-add / opportunistic — or describe your approach)
-- **Asset classes:** (SFH detached / condo / multifamily / mixed)
-- **Target markets:** (cities or regions you invest in)
-- **Hold strategy:** (typical hold period, e.g. 5–10 years buy-and-hold)
-- **Financing approach:** (conventional / portfolio loan / DSCR / cash)
+- **Identity** — investor or entity name, portfolio name, date of last revision
+- **Investment strategy** — strategy type (core / value-add / opportunistic), asset classes, target markets, typical hold period, financing approach, reinvestment policy
+- **Target return metrics** — minimum IRR, equity multiple (EM), average cash-on-cash, DSCR at acquisition, going-in cap rate, and GRM thresholds
+- **Asset allocation targets** — target mix by property type and market, max single-asset concentration, target portfolio size
+- **Risk tolerance & constraints** — vacancy and expense growth underwriting rates, sensitivity floor, max LTV, per-property cash reserve requirement
 
-## Target Return Metrics
+**How to set your portfolio goals:**
 
-*These are your underwriting hurdles. Any acquisition model in [[financial-models]] should meet or exceed these thresholds.*
+1. Copy `raw_sources/portfolio/blank-portfolio-goals.md` and rename it
+2. Fill in your strategy and target metrics
+3. Run `synthadoc ingest raw_sources/portfolio/portfolio-goals.md -w <wiki>`
+4. Re-ingest whenever strategy or thresholds change
 
-| Metric | Target | Notes |
-|--------|--------|-------|
-| **IRR (levered)** | % | Minimum acceptable over the full hold |
-| **Equity Multiple (EM)** | × | Total return ÷ cash invested |
-| **Average Cash-on-Cash** | % | Average annual pre-tax cash flow ÷ equity |
-| **DSCR at acquisition** | × | NOI ÷ annual debt service (min 1.20 typical) |
-| **Max purchase cap rate discount** | basis points below market | How far below market cap rate you'll underwrite |
-
-*Standard: NCREIF/CRE convention; IRR calculated via XIRR on dated cash flows.*
-
-## Portfolio Summary
-
-*Update as assets are acquired or disposed of.*
-
-| Asset | Type | Market | Acquisition Date | Equity Invested ($) | Status |
-|-------|------|--------|-----------------|-------------------|--------|
-| [[properties]] | | | | | Active |
-
-**Totals:**
-- **Number of assets:** 
-- **Total equity invested:** $
-- **Total current market value:** $
-- **Portfolio-level unrealized gain:** $
-
-## Asset Allocation Targets
-
-- **By property type:** (e.g. 70% SFH, 30% condo)
-- **By market:** (e.g. primary metro ≥ 60%)
-- **Max single-asset concentration:** % of total portfolio equity
-
-## Notes & Strategy Rationale
-
--
-
----
-
-*Cross-links: [[properties]] · [[financial-models]] · [[market-analysis]] · [[deal-memos]]*
+These metrics become the benchmark when you query projected returns across [[financial-models]] and compare actuals in [[properties]].

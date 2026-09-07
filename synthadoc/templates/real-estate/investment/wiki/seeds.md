@@ -64,9 +64,10 @@ synthadoc ingest "https://www.northspyre.com/blog/dcf-model-real-estate" -w <wik
   `synthadoc ingest raw_sources/financial-models/<your-model>.md -w <wiki>`.
   See [[financial-models]] for what gets captured.
 
-- [ ] **Document your target return metrics in [[portfolio]]** — open
-  `wiki/portfolio.md` and fill in your investment strategy, target IRR,
-  equity multiple, and cash-on-cash thresholds. These become your underwriting
-  hurdles when you query across [[financial-models]].
+- [ ] **Document your target return metrics in [[portfolio]]** — copy
+  `raw_sources/portfolio/blank-portfolio-goals.md`, fill in your investment
+  strategy, target IRR, equity multiple, and cash-on-cash thresholds, then run
+  `synthadoc ingest raw_sources/portfolio/portfolio-goals.md -w <wiki>`.
+  See [[portfolio]] for what gets captured.
 
 - [ ] **Run scaffold to build the index** — `synthadoc scaffold -w <wiki>`
