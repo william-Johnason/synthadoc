@@ -44,8 +44,21 @@ synthadoc ingest "https://www.northspyre.com/blog/dcf-model-real-estate" -w <wik
 
 ## First steps checklist
 
-- [ ] Create a property page for each asset in your portfolio
-- [ ] Ingest the most recent market report for your primary submarket
+- [ ] **Create a property page for each asset in your portfolio** — copy
+  `raw_sources/properties/blank-property-intake.md` once per property, fill in
+  the details, then run `synthadoc ingest raw_sources/properties/<your-property>.md -w <wiki>`.
+  Each ingested file creates a page in [[properties]].
+
+- [ ] **Ingest the most recent market report for your primary submarket** — find a
+  recent report for your city or neighbourhood on
+  [Zillow Research](https://www.zillow.com/research/),
+  [Redfin Data Center](https://www.redfin.com/news/data-center/),
+  [Realtor.com Research](https://www.realtor.com/research/), or from a broker
+  (JLL, CBRE, Marcus &amp; Millichap), then run
+  `synthadoc ingest "https://..." -w <wiki>`. See [[submarkets]] for what gets captured.
+
 - [ ] Build a financial model page for your first property
+
 - [ ] Document your target return metrics in [[portfolio]]
-- [ ] Run scaffold to build the index
+
+- [ ] **Run scaffold to build the index** — `synthadoc scaffold -w <wiki>`
