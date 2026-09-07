@@ -22,7 +22,7 @@ Each financial model page records:
 
 **How to build a financial model page:**
 
-1. Copy `raw_sources/financial-models/blank-financial-model.md` and rename it
+1. Copy `raw_sources/financial-models/template-financial-model.md` and rename it
 2. Fill in assumptions and paste year-by-year results from your spreadsheet
 3. Run `synthadoc ingest raw_sources/financial-models/<your-model>.md -w <wiki>`
 4. Re-ingest annually or after major assumption changes

@@ -45,7 +45,7 @@ synthadoc ingest "https://www.northspyre.com/blog/dcf-model-real-estate" -w <wik
 ## First steps checklist
 
 - [ ] **Create a property page for each asset in your portfolio** — copy
-  `raw_sources/properties/blank-property-intake.md` once per property, fill in
+  `raw_sources/properties/template-property-intake.md` once per property, fill in
   the details, then run `synthadoc ingest raw_sources/properties/<your-property>.md -w <wiki>`.
   Each ingested file creates a page in [[properties]].
 
@@ -58,14 +58,14 @@ synthadoc ingest "https://www.northspyre.com/blog/dcf-model-real-estate" -w <wik
   `synthadoc ingest "https://..." -w <wiki>`. See [[submarkets]] for what gets captured.
 
 - [ ] **Build a financial model page for your first property** — copy
-  `raw_sources/financial-models/blank-financial-model.md`, fill in your
+  `raw_sources/financial-models/template-financial-model.md`, fill in your
   acquisition assumptions and paste the year-by-year results from your
   spreadsheet, then run
   `synthadoc ingest raw_sources/financial-models/<your-model>.md -w <wiki>`.
   See [[financial-models]] for what gets captured.
 
 - [ ] **Document your target return metrics in [[portfolio]]** — copy
-  `raw_sources/portfolio/blank-portfolio-goals.md`, fill in your investment
+  `raw_sources/portfolio/template-portfolio-goals.md`, fill in your investment
   strategy, target IRR, equity multiple, and cash-on-cash thresholds, then run
   `synthadoc ingest raw_sources/portfolio/portfolio-goals.md -w <wiki>`.
   See [[portfolio]] for what gets captured.

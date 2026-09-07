@@ -20,7 +20,7 @@ The portfolio page captures:
 
 **How to set your portfolio goals:**
 
-1. Copy `raw_sources/portfolio/blank-portfolio-goals.md` and rename it
+1. Copy `raw_sources/portfolio/template-portfolio-goals.md` and rename it
 2. Fill in your strategy and target metrics
 3. Run `synthadoc ingest raw_sources/portfolio/portfolio-goals.md -w <wiki>`
 4. Re-ingest whenever strategy or thresholds change
