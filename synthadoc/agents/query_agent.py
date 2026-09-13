@@ -580,7 +580,10 @@ _BROKEN_CITATIONS_HEADER_RE = re.compile(
     re.IGNORECASE,
 )
 _BROKEN_CITATIONS_AFTER_RE = re.compile(
-    r'\b(?:broken\s+)?citation\s*(?:issue|ref|problem)s?\s*:\s*([1-9]\d*)',
+    # "citation issues: 2"  /  "citation refs: 2"
+    r'\b(?:broken\s+)?citation\s*(?:issue|ref|problem)s?\s*:\s*([1-9]\d*)'
+    # "broken citations: 2"  (lint-report summary line — the most reliable total)
+    r'|\bbroken\s+citations?\s*:\s*([1-9]\d*)',
     re.IGNORECASE,
 )
 _NO_BROKEN_CITATIONS_RE = re.compile(
@@ -670,9 +673,11 @@ def _build_pre_prompt(answer: str) -> str | None:
     # invisible in navigation but do not block page rendering.
     if not _NO_BROKEN_CITATIONS_RE.search(answer):
         for pat in (
-            _BROKEN_CITATIONS_COUNT_RE,
-            _BROKEN_CITATIONS_HEADER_RE,
+            # Try summary/total formats first so a "Broken citations: 2" line
+            # wins over per-page "(1 broken citation(s))" detail lines.
             _BROKEN_CITATIONS_AFTER_RE,
+            _BROKEN_CITATIONS_HEADER_RE,
+            _BROKEN_CITATIONS_COUNT_RE,
         ):
             m = pat.search(answer)
             if m:

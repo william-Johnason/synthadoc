@@ -172,3 +172,26 @@ def test_pre_prompt_broken_citations_triggers_resolver_phrase():
     prompt = _build_pre_prompt("2 citation issue(s) detected.")
     assert prompt is not None
     assert "citation resolver" in prompt.lower()
+
+
+def test_pre_prompt_broken_citations_summary_wins_over_per_page_detail():
+    """Lint report shows 'Broken citations: 2' in the summary but each
+    per-page entry says '1 broken citation(s)'.  The total (2) must win."""
+    from synthadoc.agents.query_agent import _build_pre_prompt
+    answer = (
+        "Broken citations: 2\n"
+        "[[artificial-intelligence-history]] (1 broken citation(s))\n"
+        "[[programming-languages-overview]] (1 broken citation(s))\n"
+    )
+    prompt = _build_pre_prompt(answer)
+    assert prompt is not None
+    assert "2" in prompt, f"Expected total '2', got: {prompt!r}"
+    assert "1" not in prompt, f"Per-page count '1' leaked into prompt: {prompt!r}"
+
+
+def test_pre_prompt_broken_citations_bare_summary_line():
+    """'Broken citations: N' alone (lint-report summary line format) is matched."""
+    from synthadoc.agents.query_agent import _build_pre_prompt
+    prompt = _build_pre_prompt("Broken citations: 3")
+    assert prompt is not None
+    assert "3" in prompt
